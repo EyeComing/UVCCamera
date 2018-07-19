@@ -1,0 +1,14 @@
+*.iml
+.gradle
+local.properties
+.idea
+.DS_Store
+build
+captures
+.externalNativeBuild
+/app/release
+/usbcamerademo/release
+/*/src/androidTest
+/*/src/test
+*.rar
+*.zip
