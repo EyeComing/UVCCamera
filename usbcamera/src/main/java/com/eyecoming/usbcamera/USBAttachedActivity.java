@@ -7,7 +7,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 /**
- * USBAttachedActivity
+ * USBAttachedActivity 用于usb设备连接以后唤起，唤起后自动销毁，以达到记住usb权限的功能，
+ * 首次连接当执行mUSBMonitor.requestPermission(device)时需要确认权限，之后无需再次确认权限
  *
  * @author JesseHu
  * @date 2018/7/23
