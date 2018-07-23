@@ -83,6 +83,8 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
+     * 初始化UCamera
+     *
      * @param context                 Context
      * @param onDeviceConnectListener USBMonitor.OnDeviceConnectListener
      *                                <br/>如果设置了该监听 {@link UCamera#setOnCameraListener(OnCameraListener)} 将无效
