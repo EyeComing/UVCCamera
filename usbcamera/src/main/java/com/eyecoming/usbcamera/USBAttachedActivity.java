@@ -21,6 +21,7 @@ public class USBAttachedActivity extends AppCompatActivity {
         wl.alpha = 0.0f;
         window.setAttributes(wl);
         super.onCreate(savedInstanceState);
+        finish();
     }
 
     @Override
