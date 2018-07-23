@@ -220,7 +220,7 @@ public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
      * select the first codec that match a specific MIME type
      *
      * @param mimeType
-     * @return
+     * @return MediaCodecInfo
      */
     private static final MediaCodecInfo selectAudioCodec(final String mimeType) {
         if (DEBUG) {

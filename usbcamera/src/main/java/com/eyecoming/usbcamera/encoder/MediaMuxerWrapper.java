@@ -265,7 +265,7 @@ public class MediaMuxerWrapper {
     /**
      * get current date and time as String
      *
-     * @return
+     * @return current date and time
      */
     private static final String getDateTimeString() {
         final GregorianCalendar now = new GregorianCalendar();

@@ -96,7 +96,7 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
      * @param width       预览宽度
      * @param height      预览高度
      * @param format      编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
-     * @return
+     * @return UVCCameraHandlerMultiSurface
      */
     public static final UVCCameraHandlerMultiSurface createHandler(
             final Activity parent, final CameraViewInterface cameraView,
@@ -115,7 +115,7 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
      * @param height          预览高度
      * @param format          编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
      * @param bandwidthFactor 带宽
-     * @return
+     * @return UVCCameraHandlerMultiSurface
      */
     public static final UVCCameraHandlerMultiSurface createHandler(
             final Activity parent, final CameraViewInterface cameraView,

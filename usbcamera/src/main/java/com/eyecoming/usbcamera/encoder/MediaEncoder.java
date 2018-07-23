@@ -480,7 +480,7 @@ public abstract class MediaEncoder implements Runnable {
     /**
      * get next encoding presentationTimeUs
      *
-     * @return
+     * @return presentationTime
      */
     protected long getPTSUs() {
         long result = System.nanoTime() / 1000L;
