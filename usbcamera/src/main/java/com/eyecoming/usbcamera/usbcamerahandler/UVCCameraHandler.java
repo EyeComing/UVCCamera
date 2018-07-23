@@ -29,16 +29,22 @@ import com.eyecoming.usbcamera.widget.CameraViewInterface;
 import com.serenegiant.usb.IFrameCallback;
 import com.serenegiant.usb.UVCCamera;
 
+/**
+ * UVCCameraHandler
+ *
+ * @author JesseHu
+ * @date 2018/7/20
+ */
 public class UVCCameraHandler extends AbstractUVCCameraHandler {
 
     /**
      * create UVCCameraHandler, use MediaVideoEncoder, try MJPEG, default bandwidth
      *
-     * @param parent
-     * @param cameraView
-     * @param width
-     * @param height
-     * @return
+     * @param parent     Activity
+     * @param cameraView CameraViewInterface
+     * @param width      预览宽度
+     * @param height     预览高度
+     * @return UVCCameraHandler
      */
     public static final UVCCameraHandler createHandler(
             final Activity parent, final CameraViewInterface cameraView,
@@ -50,12 +56,12 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
     /**
      * create UVCCameraHandler, use MediaVideoEncoder, try MJPEG
      *
-     * @param parent
-     * @param cameraView
-     * @param width
-     * @param height
-     * @param bandwidthFactor
-     * @return
+     * @param parent          Activity
+     * @param cameraView      CameraViewInterface
+     * @param width           预览宽度
+     * @param height          预览高度
+     * @param bandwidthFactor 带宽
+     * @return UVCCameraHandler
      */
     public static final UVCCameraHandler createHandler(
             final Activity parent, final CameraViewInterface cameraView,
@@ -67,12 +73,12 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
     /**
      * create UVCCameraHandler, try MJPEG, default bandwidth
      *
-     * @param parent
-     * @param cameraView
-     * @param encoderType 0: use MediaSurfaceEncoder, 1: use MediaVideoEncoder, 2: use MediaVideoBufferEncoder
-     * @param width
-     * @param height
-     * @return
+     * @param parent      Activity
+     * @param cameraView  CameraViewInterface
+     * @param encoderType 编码类型0:MediaSurfaceEncoder, 1:MediaVideoEncoder, 2: MediaVideoBufferEncoder
+     * @param width       预览宽度
+     * @param height      预览高度
+     * @return UVCCameraHandler
      */
     public static final UVCCameraHandler createHandler(
             final Activity parent, final CameraViewInterface cameraView,
@@ -84,13 +90,13 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
     /**
      * create UVCCameraHandler, default bandwidth
      *
-     * @param parent
-     * @param cameraView
-     * @param encoderType 0: use MediaSurfaceEncoder, 1: use MediaVideoEncoder, 2: use MediaVideoBufferEncoder
-     * @param width
-     * @param height
-     * @param format      either UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
-     * @return
+     * @param parent      Activity
+     * @param cameraView  CameraViewInterface
+     * @param encoderType 编码类型0:MediaSurfaceEncoder, 1:MediaVideoEncoder, 2: MediaVideoBufferEncoder
+     * @param width       预览宽度
+     * @param height      预览高度
+     * @param format      编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
+     * @return UVCCameraHandler
      */
     public static final UVCCameraHandler createHandler(
             final Activity parent, final CameraViewInterface cameraView,
@@ -102,14 +108,14 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
     /**
      * create UVCCameraHandler
      *
-     * @param parent
-     * @param cameraView
-     * @param encoderType     0: use MediaSurfaceEncoder, 1: use MediaVideoEncoder, 2: use MediaVideoBufferEncoder
-     * @param width
-     * @param height
-     * @param format          either UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
-     * @param bandwidthFactor
-     * @return
+     * @param parent          Activity
+     * @param cameraView      CameraViewInterface
+     * @param encoderType     编码类型0:MediaSurfaceEncoder, 1:MediaVideoEncoder, 2: MediaVideoBufferEncoder
+     * @param width           预览宽度
+     * @param height          预览高度
+     * @param format          编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
+     * @param bandwidthFactor 带宽
+     * @return UVCCameraHandler
      */
     public static final UVCCameraHandler createHandler(
             final Activity parent, final CameraViewInterface cameraView,
@@ -124,26 +130,56 @@ public class UVCCameraHandler extends AbstractUVCCameraHandler {
         super(thread);
     }
 
+    /**
+     * 获取UVCCamera，并非任何时候都能获取到
+     *
+     * @return UVCCamera
+     */
     @Override
     public UVCCamera getUvcCamera() {
         return super.getUvcCamera();
     }
 
+    /**
+     * 开始预览
+     *
+     * @param surface 预览所绑定的Surface
+     */
     @Override
     public void startPreview(final Object surface) {
         super.startPreview(surface);
     }
 
+    /**
+     * 设置摄像头帧回调
+     *
+     * @param callback    IFrameCallback帧回调
+     * @param pixelFormat 编码格式
+     *                    <br/>0:PIXEL_FORMAT_RAW,
+     *                    <br/>1:PIXEL_FORMAT_YUV,
+     *                    <br/>2:PIXEL_FORMAT_RGB565,
+     *                    <br/>3:PIXEL_FORMAT_RGBX,
+     *                    <br/>4:PIXEL_FORMAT_NV21,
+     *                    <br/>5:PIXEL_FORMAT_YUV420SP
+     */
     @Override
     public void setFrameCallback(IFrameCallback callback, int pixelFormat) {
         super.setFrameCallback(callback, pixelFormat);
     }
 
+    /**
+     * 截图
+     */
     @Override
     public void captureStill() {
         super.captureStill();
     }
 
+    /**
+     * 截图
+     *
+     * @param path 截图保存路径
+     */
     @Override
     public void captureStill(final String path) {
         super.captureStill(path);

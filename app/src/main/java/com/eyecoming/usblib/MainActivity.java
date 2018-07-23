@@ -1,7 +1,9 @@
 package com.eyecoming.usblib;
 
 import android.graphics.SurfaceTexture;
+import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
 import android.widget.Toast;
@@ -15,6 +17,11 @@ import com.serenegiant.usb.IFrameCallback;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.UVCCamera;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,7 +49,7 @@ public final class MainActivity extends AppCompatActivity implements CameraDialo
         mUVCCameraView = findViewById(R.id.camera_view);
         mUVCCameraView.setAspectRatio(PREVIEW_WIDTH / (float) PREVIEW_HEIGHT);
         //目前autoConnect只能设置为false，否则无图像
-        mUCamera = new UCamera(this, false, new OnCameraListener() {
+        mUCamera = new UCamera(this, true, new OnCameraListener() {
             @Override
             public void connected(UVCCamera camera, USBMonitor.UsbControlBlock ctrlBlock) {
                 mCameraHandler.open(ctrlBlock);
@@ -50,7 +57,7 @@ public final class MainActivity extends AppCompatActivity implements CameraDialo
                 mCameraHandler.startPreview(new Surface(st));
 //                UVCCamera uvcCamera = mCameraHandler.getUvcCamera();
 //                uvcCamera.setFrameCallback(mFrameCallback, UVCCamera.PIXEL_FORMAT_NV21);
-                mCameraHandler.setFrameCallback(mFrameCallback, UVCCamera.PIXEL_FORMAT_NV21);
+                mCameraHandler.setFrameCallback(mFrameCallback, 6);
             }
 
             @Override
@@ -112,14 +119,54 @@ public final class MainActivity extends AppCompatActivity implements CameraDialo
                 @Override
                 public void run() {
                     //处理每一帧的数据
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this, "onFrame回调触发", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(MainActivity.this, "onFrame回调触发", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+
+                    getFile(decoding, Environment.getExternalStorageDirectory().getAbsolutePath(), "yuv.yuv");
                 }
             });
         }
     };
+
+    public static void getFile(byte[] bfile, String filePath, String fileName) {
+        BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+        File file = null;
+        try {
+            File dir = new File(filePath);
+            //判断文件目录是否存在
+            if (!dir.exists() && dir.isDirectory()) {
+                dir.mkdirs();
+            }
+//            file = new File(filePath + File.separator + fileName);
+            file = new File(filePath, fileName);
+//            if (file.exists()) {
+//                file.delete();
+//            }
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bfile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
 }

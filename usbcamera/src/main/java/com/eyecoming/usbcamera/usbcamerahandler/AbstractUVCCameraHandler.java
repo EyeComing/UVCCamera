@@ -64,24 +64,30 @@ import java.nio.ByteBuffer;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * AbstractUVCCameraHandler
+ *
+ * @author JesseHu
+ * @date 2018/7/20
+ */
 abstract class AbstractUVCCameraHandler extends Handler {
     private static final boolean DEBUG = true;
     private static final String TAG = "AbsUVCCameraHandler";
 
     public interface CameraCallback {
-        public void onOpen();
+        void onOpen();
 
-        public void onClose();
+        void onClose();
 
-        public void onStartPreview();
+        void onStartPreview();
 
-        public void onStopPreview();
+        void onStopPreview();
 
-        public void onStartRecording();
+        void onStartRecording();
 
-        public void onStopRecording();
+        void onStopRecording();
 
-        public void onError(final Exception e);
+        void onError(final Exception e);
     }
 
     private static final int MSG_OPEN = 0;
@@ -107,31 +113,62 @@ abstract class AbstractUVCCameraHandler extends Handler {
         return thread != null ? thread.mUVCCamera : null;
     }
 
+    /**
+     * 获取预览宽度
+     *
+     * @return 预览宽度
+     */
     public int getWidth() {
         final CameraThread thread = mWeakThread.get();
         return thread != null ? thread.getWidth() : 0;
     }
 
+    /**
+     * 获取预览高度
+     *
+     * @return 预览高度
+     */
     public int getHeight() {
         final CameraThread thread = mWeakThread.get();
         return thread != null ? thread.getHeight() : 0;
     }
 
+    /**
+     * 摄像头是否打开
+     *
+     * @return true:打开，false:未打开
+     */
     public boolean isOpened() {
         final CameraThread thread = mWeakThread.get();
         return thread != null && thread.isCameraOpened();
     }
 
+    /**
+     * 摄像头是否预览中
+     *
+     * @return true:开启预览，false:未开启预览
+     */
     public boolean isPreviewing() {
         final CameraThread thread = mWeakThread.get();
         return thread != null && thread.isPreviewing();
     }
 
+    /**
+     * 摄像头是否录制中
+     *
+     * @return true:录制中，false:未录制
+     */
     public boolean isRecording() {
         final CameraThread thread = mWeakThread.get();
         return thread != null && thread.isRecording();
     }
 
+    /**
+     * 判断是否为指定设备
+     *
+     * @param device UsbDevice对应的设备
+     * @return true/false
+     */
     public boolean isEqual(final UsbDevice device) {
         final CameraThread thread = mWeakThread.get();
         return (thread != null) && thread.isEqual(device);
@@ -153,11 +190,19 @@ abstract class AbstractUVCCameraHandler extends Handler {
         }
     }
 
+    /**
+     * 开启指定摄像头
+     *
+     * @param ctrlBlock 指定摄像头Block
+     */
     public void open(final USBMonitor.UsbControlBlock ctrlBlock) {
         checkReleased();
         sendMessage(obtainMessage(MSG_OPEN, ctrlBlock));
     }
 
+    /**
+     * 关闭摄像头
+     */
     public void close() {
         if (DEBUG) {
             Log.v(TAG, "close:");
@@ -171,6 +216,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
         }
     }
 
+    /**
+     * 跳转预览
+     *
+     * @param width  预览宽度
+     * @param height 预览宽度
+     */
     public void resize(final int width, final int height) {
         checkReleased();
         throw new UnsupportedOperationException("does not support now");
@@ -192,6 +243,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
         sendMessage(obtainMessage(MSG_PREVIEW_START, surface));
     }
 
+    /**
+     * 停止预览
+     */
     public void stopPreview() {
         if (DEBUG) {
             Log.v(TAG, "stopPreview:");
@@ -231,21 +285,45 @@ abstract class AbstractUVCCameraHandler extends Handler {
         sendMessage(obtainMessage(MSG_CAPTURE_STILL, path));
     }
 
+    /**
+     * 开始录制
+     */
     public void startRecording() {
         checkReleased();
         sendEmptyMessage(MSG_CAPTURE_START);
     }
 
+    /**
+     * 开始录制并保存到指定路径
+     *
+     * @param path 保存路径
+     */
+    public void startRecording(String path) {
+        checkReleased();
+        sendMessage(obtainMessage(MSG_CAPTURE_START, path));
+    }
+
+    /**
+     * 停止录制
+     */
     public void stopRecording() {
         sendEmptyMessage(MSG_CAPTURE_STOP);
     }
 
+    /**
+     * 释放摄像头
+     */
     public void release() {
         mReleased = true;
         close();
         sendEmptyMessage(MSG_RELEASE);
     }
 
+    /**
+     * 添加摄像头回调
+     *
+     * @param callback 回调
+     */
     public void addCallback(final CameraCallback callback) {
         checkReleased();
         if (!mReleased && (callback != null)) {
@@ -256,6 +334,11 @@ abstract class AbstractUVCCameraHandler extends Handler {
         }
     }
 
+    /**
+     * 移除摄像头回调
+     *
+     * @param callback 回调
+     */
     public void removeCallback(final CameraCallback callback) {
         if (callback != null) {
             final CameraThread thread = mWeakThread.get();
@@ -269,12 +352,24 @@ abstract class AbstractUVCCameraHandler extends Handler {
         sendMessage(obtainMessage(MSG_MEDIA_UPDATE, path));
     }
 
+    /**
+     * 检测是否支持对应flag
+     *
+     * @param flag 对应flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
+     * @return true/false
+     */
     public boolean checkSupportFlag(final long flag) {
         checkReleased();
         final CameraThread thread = mWeakThread.get();
         return thread != null && thread.mUVCCamera != null && thread.mUVCCamera.checkSupportFlag(flag);
     }
 
+    /**
+     * 获取对应flag的值
+     *
+     * @param flag 对应flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
+     * @return 对应值
+     */
     public int getValue(final int flag) {
         checkReleased();
         final CameraThread thread = mWeakThread.get();
@@ -289,6 +384,13 @@ abstract class AbstractUVCCameraHandler extends Handler {
         throw new IllegalStateException();
     }
 
+    /**
+     * 设置指定flag的值
+     *
+     * @param flag  指定flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
+     * @param value 指定值
+     * @return 设置后的值
+     */
     public int setValue(final int flag, final int value) {
         checkReleased();
         final CameraThread thread = mWeakThread.get();
@@ -305,6 +407,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
         throw new IllegalStateException();
     }
 
+    /**
+     * 重置指定flag的值
+     *
+     * @param flag 指定flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
+     * @return 重置后的值
+     */
     public int resetValue(final int flag) {
         checkReleased();
         final CameraThread thread = mWeakThread.get();
@@ -344,7 +452,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 thread.handleCaptureStill((String) msg.obj);
                 break;
             case MSG_CAPTURE_START:
-                thread.handleStartRecording();
+                thread.handleStartRecording((String) msg.obj);
                 break;
             case MSG_CAPTURE_STOP:
                 thread.handleStopRecording();
@@ -596,7 +704,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
             }
         }
 
-        public void handleStartRecording() {
+        public void handleStartRecording(String path) {
             if (DEBUG) {
                 Log.v(TAG_THREAD, "handleStartRecording:");
             }
@@ -604,13 +712,21 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 if ((mUVCCamera == null) || (mMuxer != null)) {
                     return;
                 }
-                final MediaMuxerWrapper muxer = new MediaMuxerWrapper(".mp4");    // if you record audio only, ".m4a" is also OK.
+                // if you record audio only, ".m4a" is also OK.
+                MediaMuxerWrapper muxer;
+                if (path != null) {
+                    muxer = new MediaMuxerWrapper(path, ".mp4");
+                } else {
+                    muxer = new MediaMuxerWrapper(".mp4");
+                }
                 MediaVideoBufferEncoder videoEncoder = null;
                 switch (mEncoderType) {
-                    case 1:    // for video capturing using MediaVideoEncoder
+                    case 1:
+                        // for video capturing using MediaVideoEncoder
                         new MediaVideoEncoder(muxer, getWidth(), getHeight(), mMediaEncoderListener);
                         break;
-                    case 2:    // for video capturing using MediaVideoBufferEncoder
+                    case 2:
+                        // for video capturing using MediaVideoBufferEncoder
                         videoEncoder = new MediaVideoBufferEncoder(muxer, getWidth(), getHeight(), mMediaEncoderListener);
                         break;
                     // case 0:	// for video capturing using MediaSurfaceEncoder
@@ -618,10 +734,10 @@ abstract class AbstractUVCCameraHandler extends Handler {
                         new MediaSurfaceEncoder(muxer, getWidth(), getHeight(), mMediaEncoderListener);
                         break;
                 }
-                if (true) {
-                    // for audio capturing
-                    new MediaAudioEncoder(muxer, mMediaEncoderListener);
-                }
+
+                // for audio capturing
+                new MediaAudioEncoder(muxer, mMediaEncoderListener);
+
                 muxer.prepare();
                 muxer.startRecording();
                 if (videoEncoder != null) {

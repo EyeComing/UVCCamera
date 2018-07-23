@@ -30,153 +30,188 @@ import com.eyecoming.usbcamera.widget.CameraViewInterface;
 import com.serenegiant.glutils.RendererHolder;
 import com.serenegiant.usb.UVCCamera;
 
+/**
+ * UVCCameraHandlerMultiSurface多个预览视图
+ *
+ * @author JesseHu
+ * @date 2018/7/20
+ */
 public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
-	/**
-	 * create UVCCameraHandlerMultiSurface, use MediaVideoEncoder, try MJPEG, default bandwidth
-	 * @param parent
-	 * @param cameraView
-	 * @param width
-	 * @param height
-	 * @return
-	 */
-	public static final UVCCameraHandlerMultiSurface createHandler(
-			final Activity parent, final CameraViewInterface cameraView,
-			final int width, final int height) {
+    /**
+     * create UVCCameraHandlerMultiSurface, use MediaVideoEncoder, try MJPEG, default bandwidth
+     *
+     * @param parent     Activity
+     * @param cameraView CameraViewInterface
+     * @param width      预览宽度
+     * @param height     预览高度
+     * @return UVCCameraHandlerMultiSurface
+     */
+    public static final UVCCameraHandlerMultiSurface createHandler(
+            final Activity parent, final CameraViewInterface cameraView,
+            final int width, final int height) {
 
-		return createHandler(parent, cameraView, 1, width, height, UVCCamera.FRAME_FORMAT_MJPEG, UVCCamera.DEFAULT_BANDWIDTH);
-	}
+        return createHandler(parent, cameraView, 1, width, height, UVCCamera.FRAME_FORMAT_MJPEG, UVCCamera.DEFAULT_BANDWIDTH);
+    }
 
-	/**
-	 * create UVCCameraHandlerMultiSurface, use MediaVideoEncoder, try MJPEG
-	 * @param parent
-	 * @param cameraView
-	 * @param width
-	 * @param height
-	 * @param bandwidthFactor
-	 * @return
-	 */
-	public static final UVCCameraHandlerMultiSurface createHandler(
-			final Activity parent, final CameraViewInterface cameraView,
-			final int width, final int height, final float bandwidthFactor) {
+    /**
+     * create UVCCameraHandlerMultiSurface, use MediaVideoEncoder, try MJPEG
+     *
+     * @param parent          Activity
+     * @param cameraView      CameraViewInterface
+     * @param width           预览宽度
+     * @param height          预览高度
+     * @param bandwidthFactor 带宽
+     * @return UVCCameraHandlerMultiSurface
+     */
+    public static final UVCCameraHandlerMultiSurface createHandler(
+            final Activity parent, final CameraViewInterface cameraView,
+            final int width, final int height, final float bandwidthFactor) {
 
-		return createHandler(parent, cameraView, 1, width, height, UVCCamera.FRAME_FORMAT_MJPEG, bandwidthFactor);
-	}
+        return createHandler(parent, cameraView, 1, width, height, UVCCamera.FRAME_FORMAT_MJPEG, bandwidthFactor);
+    }
 
-	/**
-	 * create UVCCameraHandlerMultiSurface, try MJPEG, default bandwidth
-	 * @param parent
-	 * @param cameraView
-	 * @param encoderType
-	 * @param width
-	 * @param height
-	 * @return
-	 */
-	public static final UVCCameraHandlerMultiSurface createHandler(
-			final Activity parent, final CameraViewInterface cameraView,
-			final int encoderType, final int width, final int height) {
+    /**
+     * create UVCCameraHandlerMultiSurface, try MJPEG, default bandwidth
+     *
+     * @param parent      Activity
+     * @param cameraView  CameraViewInterface
+     * @param encoderType 编码类型0:MediaSurfaceEncoder, 1:MediaVideoEncoder, 2: MediaVideoBufferEncoder
+     * @param width       预览宽度
+     * @param height      预览高度
+     * @return UVCCameraHandlerMultiSurface
+     */
+    public static final UVCCameraHandlerMultiSurface createHandler(
+            final Activity parent, final CameraViewInterface cameraView,
+            final int encoderType, final int width, final int height) {
 
-		return createHandler(parent, cameraView, encoderType, width, height, UVCCamera.FRAME_FORMAT_MJPEG, UVCCamera.DEFAULT_BANDWIDTH);
-	}
+        return createHandler(parent, cameraView, encoderType, width, height, UVCCamera.FRAME_FORMAT_MJPEG, UVCCamera.DEFAULT_BANDWIDTH);
+    }
 
-	/**
-	 * create UVCCameraHandlerMultiSurface, default bandwidth
-	 * @param parent
-	 * @param cameraView
-	 * @param encoderType
-	 * @param width
-	 * @param height
-	 * @param format
-	 * @return
-	 */
-	public static final UVCCameraHandlerMultiSurface createHandler(
-			final Activity parent, final CameraViewInterface cameraView,
-			final int encoderType, final int width, final int height, final int format) {
+    /**
+     * create UVCCameraHandlerMultiSurface, default bandwidth
+     *
+     * @param parent      Activity
+     * @param cameraView  CameraViewInterface
+     * @param encoderType 编码类型
+     * @param width       预览宽度
+     * @param height      预览高度
+     * @param format      编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
+     * @return
+     */
+    public static final UVCCameraHandlerMultiSurface createHandler(
+            final Activity parent, final CameraViewInterface cameraView,
+            final int encoderType, final int width, final int height, final int format) {
 
-		return createHandler(parent, cameraView, encoderType, width, height, format, UVCCamera.DEFAULT_BANDWIDTH);
-	}
+        return createHandler(parent, cameraView, encoderType, width, height, format, UVCCamera.DEFAULT_BANDWIDTH);
+    }
 
-	/**
-	 * create UVCCameraHandlerMultiSurface
-	 * @param parent
-	 * @param cameraView
-	 * @param encoderType 0: use MediaSurfaceEncoder, 1: use MediaVideoEncoder, 2: use MediaVideoBufferEncoder
-	 * @param width
-	 * @param height
-	 * @param format either UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
-	 * @param bandwidthFactor
-	 * @return
-	 */
-	public static final UVCCameraHandlerMultiSurface createHandler(
-			final Activity parent, final CameraViewInterface cameraView,
-			final int encoderType, final int width, final int height, final int format, final float bandwidthFactor) {
+    /**
+     * create UVCCameraHandlerMultiSurface
+     *
+     * @param parent          Activity
+     * @param cameraView      CameraViewInterface
+     * @param encoderType     0: use MediaSurfaceEncoder, 1: use MediaVideoEncoder, 2: use MediaVideoBufferEncoder
+     * @param width           预览宽度
+     * @param height          预览高度
+     * @param format          编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
+     * @param bandwidthFactor 带宽
+     * @return
+     */
+    public static final UVCCameraHandlerMultiSurface createHandler(
+            final Activity parent, final CameraViewInterface cameraView,
+            final int encoderType, final int width, final int height, final int format, final float bandwidthFactor) {
 
-		final CameraThread thread = new CameraThread(UVCCameraHandlerMultiSurface.class, parent, cameraView, encoderType, width, height, format, bandwidthFactor);
-		thread.start();
-		return (UVCCameraHandlerMultiSurface)thread.getHandler();
-	}
+        final CameraThread thread = new CameraThread(UVCCameraHandlerMultiSurface.class, parent, cameraView, encoderType, width, height, format, bandwidthFactor);
+        thread.start();
+        return (UVCCameraHandlerMultiSurface) thread.getHandler();
+    }
 
-	private RendererHolder mRendererHolder;
-	protected UVCCameraHandlerMultiSurface(final CameraThread thread) {
-		super(thread);
-		mRendererHolder = new RendererHolder(thread.getWidth(), thread.getHeight(), null);
-	}
+    private RendererHolder mRendererHolder;
 
-	@Override
+    protected UVCCameraHandlerMultiSurface(final CameraThread thread) {
+        super(thread);
+        mRendererHolder = new RendererHolder(thread.getWidth(), thread.getHeight(), null);
+    }
+
+    @Override
     public synchronized void release() {
-		if (mRendererHolder != null) {
-			mRendererHolder.release();
-			mRendererHolder = null;
-		}
-		super.release();
-	}
+        if (mRendererHolder != null) {
+            mRendererHolder.release();
+            mRendererHolder = null;
+        }
+        super.release();
+    }
 
-	@Override
+    @Override
     public synchronized void resize(final int width, final int height) {
-		super.resize(width, height);
-		if (mRendererHolder != null) {
-			mRendererHolder.resize(width, height);
-		}
-	}
+        super.resize(width, height);
+        if (mRendererHolder != null) {
+            mRendererHolder.resize(width, height);
+        }
+    }
 
-	public synchronized void startPreview() {
-		checkReleased();
-		if (mRendererHolder != null) {
-			super.startPreview(mRendererHolder.getSurface());
-		} else {
-			throw new IllegalStateException();
-		}
-	}
+    /**
+     * 开启预览
+     */
+    public synchronized void startPreview() {
+        checkReleased();
+        if (mRendererHolder != null) {
+            super.startPreview(mRendererHolder.getSurface());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
 
-	public synchronized void addSurface(final int surfaceId, final Surface surface, final boolean isRecordable) {
-		checkReleased();
-		mRendererHolder.addSurface(surfaceId, surface, isRecordable);
-	}
+    /**
+     * 添加预览Surface
+     *
+     * @param surfaceId    对应Surface的ID
+     * @param surface      预览Surface
+     * @param isRecordable 是否允许录制
+     */
+    public synchronized void addSurface(final int surfaceId, final Surface surface, final boolean isRecordable) {
+        checkReleased();
+        mRendererHolder.addSurface(surfaceId, surface, isRecordable);
+    }
 
-	public synchronized void removeSurface(final int surfaceId) {
-		if (mRendererHolder != null) {
-			mRendererHolder.removeSurface(surfaceId);
-		}
-	}
+    /**
+     * 移除预览的Surface
+     *
+     * @param surfaceId 对应Surface的ID
+     */
+    public synchronized void removeSurface(final int surfaceId) {
+        if (mRendererHolder != null) {
+            mRendererHolder.removeSurface(surfaceId);
+        }
+    }
 
-	@Override
-	public void captureStill() {
-		checkReleased();
-		super.captureStill();
-	}
+    /**
+     * 截图
+     */
+    @Override
+    public void captureStill() {
+        checkReleased();
+        super.captureStill();
+    }
 
-	@Override
-	public void captureStill(final String path) {
-		checkReleased();
-		post(new Runnable() {
-			@Override
-			public void run() {
-				synchronized (UVCCameraHandlerMultiSurface.this) {
-					if (mRendererHolder != null) {
-						mRendererHolder.captureStill(path);
-						updateMedia(path);
-					}
-				}
-			}
-		});
-	}
+    /**
+     * 截图
+     *
+     * @param path 截图保存的路径
+     */
+    @Override
+    public void captureStill(final String path) {
+        checkReleased();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (UVCCameraHandlerMultiSurface.this) {
+                    if (mRendererHolder != null) {
+                        mRendererHolder.captureStill(path);
+                        updateMedia(path);
+                    }
+                }
+            }
+        });
+    }
 }

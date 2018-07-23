@@ -3,6 +3,7 @@ package com.eyecoming.usbcamera;
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.usb.UsbDevice;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.serenegiant.usb.CameraDialog;
@@ -16,7 +17,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by JesseHu on 2017/3/30.
+ * UCamera
+ *
+ * @author JesseHu
+ * @date 2018/7/19
  */
 
 public class UCamera implements CameraDialog.CameraDialogParent {
@@ -33,8 +37,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     private static final int MAX_POOL_SIZE = 4;
     private static final int KEEP_ALIVE_TIME = 10;
 
-    protected static final ThreadPoolExecutor EXECUTER = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
-            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+    protected static final ThreadPoolExecutor EXECUTER = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
     /**
      * 初始化UCamera
@@ -43,7 +46,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      * @param autoConnect 是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
      */
     public UCamera(Context context, boolean autoConnect) {
-        this(context, autoConnect, (USBMonitor.OnDeviceConnectListener) null);
+        this.mContext = context;
+        this.mAutoConnect = autoConnect;
+        mUSBMonitor = new USBMonitor(context, mOnDeviceConnectListener);
     }
 
     /**
@@ -64,8 +69,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      * @param context                 Context
      * @param autoConnect             是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
      * @param onDeviceConnectListener USBMonitor.OnDeviceConnectListener <br/>如果设置了监听,autoConnect不再起作用，所有操作将在OnDeviceConnectListener的回调中自行处理,
-     *                                <br/>同时OnCameraListener也不再进行回调
-     *                                <br/>getUVCCamera()将返回null
+     *                                <br/>同时OnCameraListener也不再进行回调,即 {@link UCamera#setOnCameraListener(OnCameraListener)} 将无效
+     *                                <br/> {@link UCamera#getUVCCamera()} 和 {@link UCamera#getControlBlock()} 将返回null
+     * @deprecated 使用 {@link UCamera#UCamera(Context, USBMonitor.OnDeviceConnectListener)} 替代
      */
     public UCamera(Context context, boolean autoConnect, USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
         this.mContext = context;
@@ -73,6 +79,17 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         if (onDeviceConnectListener == null) {
             onDeviceConnectListener = mOnDeviceConnectListener;
         }
+        mUSBMonitor = new USBMonitor(context, onDeviceConnectListener);
+    }
+
+    /**
+     * @param context                 Context
+     * @param onDeviceConnectListener USBMonitor.OnDeviceConnectListener
+     *                                <br/>如果设置了该监听 {@link UCamera#setOnCameraListener(OnCameraListener)} 将无效
+     *                                <br/> {@link UCamera#getUVCCamera()} 和 {@link UCamera#getControlBlock()} 将返回null
+     */
+    public UCamera(Context context, @NonNull USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
+        this.mContext = context;
         mUSBMonitor = new USBMonitor(context, onDeviceConnectListener);
     }
 
@@ -126,20 +143,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
                         CameraDialog.showDialog((Activity) mContext);
                     }
                 } else {
-                    final int n = mUSBMonitor.getDeviceCount();
-                    if ((device == null) && (n > 0)) {
-                        // #onAttach will be called with null argument when USBMonitor detect device connection without intent.
-                        final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(mContext, R.xml.device_filter);
-                        final List<UsbDevice> devices = mUSBMonitor.getDeviceList(filter.get(0));
-                        // set first one
-                        if (devices.size() > 0) {
-                            device = devices.get(0);
-                        } else {
-                            Log.d(TAG, "No Camera Found");
-                        }
-                    }
-                    //直接连接USB设备,不进行选择
-                    mUSBMonitor.requestPermission(device);
+                    getFirstUsbCameraDevice();
                 }
             }
         }
@@ -193,6 +197,48 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         }
 
     };
+
+    /**
+     * 请求第一个可用USB摄像头
+     *
+     * @return UsbDevice
+     */
+    public UsbDevice getFirstUsbCameraDevice() {
+        List<UsbDevice> deviceList = getUsbDevices();
+        UsbDevice device = null;
+
+        if (deviceList.size() > 0) {
+            //默认去第一个摄像头
+            device = deviceList.get(0);
+            boolean result = mUSBMonitor.requestPermission(device);
+            if (result) {
+                // when failed. your device may not support USB.
+                Log.d(TAG, "your device may not support USB");
+            }
+        }
+        return device;
+    }
+
+    /**
+     * 获取USB摄像头列表
+     *
+     * @return List&lt;UsbDevice&gt;USB摄像头列表
+     */
+    public List<UsbDevice> getUsbDevices() {
+        return getUsbDevices(com.serenegiant.uvccamera.R.xml.device_filter);
+    }
+
+    /**
+     * 获取USB摄像头列表
+     *
+     * @param deviceFilterId 摄像头过滤文件
+     * @return List&lt;UsbDevice&gt;USB摄像头列表
+     */
+    public List<UsbDevice> getUsbDevices(int deviceFilterId) {
+        final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(mContext, deviceFilterId);
+        return mUSBMonitor.getDeviceList(filter.get(0));
+    }
+
 
     @Override
     public USBMonitor getUSBMonitor() {

@@ -24,5 +24,5 @@
 package com.eyecoming.usbcamera.encoder;
 
 public interface IVideoEncoder {
-	public boolean frameAvailableSoon();
+	boolean frameAvailableSoon();
 }

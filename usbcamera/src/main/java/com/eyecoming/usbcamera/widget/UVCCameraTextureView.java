@@ -43,15 +43,19 @@ import com.serenegiant.glutils.es1.GLHelper;
 import com.serenegiant.utils.FpsCounter;
 
 /**
+ * UVCCameraTextureView
+ * <p>
  * change the view size with keeping the specified aspect ratio.
  * if you set this view with in a FrameLayout and set property "android:layout_gravity="center",
  * you can show this view in the center of screen and keep the aspect ratio of content
  * XXX it is better that can set the aspect ratio as xml property
+ *
+ * @author JesseHu
+ * @date 2018/7/20
  */
-public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
-        implements TextureView.SurfaceTextureListener, CameraViewInterface {
+public class UVCCameraTextureView extends AspectRatioTextureView implements TextureView.SurfaceTextureListener, CameraViewInterface {
 
-    private static final boolean DEBUG = true;    // TODO set false on release
+    private static final boolean DEBUG = true;
     private static final String TAG = "UVCCameraTextureView";
 
     private boolean mHasSurface;
@@ -231,32 +235,32 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
     }
 
     /**
-     * update frame rate of image processing
+     * 更新图像处理的帧率
      */
     public void updateFps() {
         mFpsCounter.update();
     }
 
     /**
-     * get current frame rate of image processing
+     * 获取当前图像处理帧率
      *
-     * @return
+     * @return 当前帧率
      */
     public float getFps() {
         return mFpsCounter.getFps();
     }
 
     /**
-     * get total frame rate from start
+     * 从开始获取总帧率
      *
-     * @return
+     * @return 总帧率
      */
     public float getTotalFps() {
         return mFpsCounter.getTotalFps();
     }
 
     /**
-     * render camera frames on this view on a private thread
+     * 在一个私有线程上呈现此视图上的相机帧
      *
      * @author saki
      */
@@ -475,22 +479,6 @@ public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
                 }
                 mEncoder = encoder;
             }
-
-            /*
-             * Now you can get frame data as ByteBuffer(as YUV/RGB565/RGBX/NV21 pixel format) using IFrameCallback interface
-             * with UVCCamera#setFrameCallback instead of using following code samples.
-             */
-/*			// for part1
- 			private static final int BUF_NUM = 1;
-			private static final int BUF_STRIDE = 640 * 480;
-			private static final int BUF_SIZE = BUF_STRIDE * BUF_NUM;
-			int cnt = 0;
-			int offset = 0;
-			final int pixels[] = new int[BUF_SIZE];
-			final IntBuffer buffer = IntBuffer.wrap(pixels); */
-/*			// for part2
-			private ByteBuffer buf = ByteBuffer.allocateDirect(640 * 480 * 4);
- */
 
             /**
              * draw a frame (and request to draw for video capturing if it is necessary)
