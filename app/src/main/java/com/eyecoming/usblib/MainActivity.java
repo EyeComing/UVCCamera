@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.eyecoming.usbcamera.OnCameraListener;
@@ -14,6 +16,7 @@ import com.eyecoming.usbcamera.usbcamerahandler.UVCCameraHandler;
 import com.eyecoming.usbcamera.widget.CameraViewInterface;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.IFrameCallback;
+import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.UVCCamera;
 
@@ -23,6 +26,7 @@ import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,6 +43,9 @@ public final class MainActivity extends AppCompatActivity implements CameraDialo
     private static final int PREVIEW_HEIGHT = 720;
     private CameraViewInterface mUVCCameraView;
     private UVCCameraHandler mCameraHandler;
+    private Button mIntentBtn;
+    public USBMonitor.UsbControlBlock mCtrlBlock;
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -46,18 +53,22 @@ public final class MainActivity extends AppCompatActivity implements CameraDialo
 
         setContentView(R.layout.activity_main);
 
+        mIntentBtn = findViewById(R.id.btn_intent);
         mUVCCameraView = findViewById(R.id.camera_view);
         mUVCCameraView.setAspectRatio(PREVIEW_WIDTH / (float) PREVIEW_HEIGHT);
-        //目前autoConnect只能设置为false，否则无图像
         mUCamera = new UCamera(this, true, new OnCameraListener() {
             @Override
             public void connected(UVCCamera camera, USBMonitor.UsbControlBlock ctrlBlock) {
+                mCtrlBlock = ctrlBlock;
                 mCameraHandler.open(ctrlBlock);
                 SurfaceTexture st = mUVCCameraView.getSurfaceTexture();
-                mCameraHandler.startPreview(new Surface(st));
+                if (st != null) {
+                    mCameraHandler.startPreview(new Surface(st));
 //                UVCCamera uvcCamera = mCameraHandler.getUvcCamera();
 //                uvcCamera.setFrameCallback(mFrameCallback, UVCCamera.PIXEL_FORMAT_NV21);
-                mCameraHandler.setFrameCallback(mFrameCallback, 6);
+                    mCameraHandler.setFrameCallback(mFrameCallback, UVCCamera.PIXEL_FORMAT_NV21);
+
+                }
             }
 
             @Override
@@ -66,6 +77,40 @@ public final class MainActivity extends AppCompatActivity implements CameraDialo
             }
         });
         mCameraHandler = UVCCameraHandler.createHandler(this, mUVCCameraView, 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, 1);
+
+        mIntentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCameraHandler.isPreviewing()) {
+                    mCameraHandler.close();
+                    return;
+                }
+                mUCamera.getFirstUsbCameraDevice();
+            }
+        });
+        mUVCCameraView.setCallback(new CameraViewInterface.Callback() {
+            @Override
+            public void onSurfaceCreated(CameraViewInterface view, Surface surface) {
+                if (!mCameraHandler.isPreviewing()) {
+                    //第一次打开activity
+                    if (isFirst) {
+                        isFirst = false;
+                    } else {
+                        mUCamera.getFirstUsbCameraDevice();
+                    }
+                }
+            }
+
+            @Override
+            public void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height) {
+
+            }
+
+            @Override
+            public void onSurfaceDestroy(CameraViewInterface view, Surface surface) {
+
+            }
+        });
     }
 
     @Override
@@ -109,7 +154,7 @@ public final class MainActivity extends AppCompatActivity implements CameraDialo
     }
 
     private ExecutorService fixedExecturoService = Executors.newFixedThreadPool(1);
-    byte[] decoding = new byte[1280 * 720 * 3 / 2];
+    byte[] decoding = new byte[PREVIEW_WIDTH * PREVIEW_HEIGHT * 3 / 2];
     private final IFrameCallback mFrameCallback = new IFrameCallback() {
         @Override
         public void onFrame(final ByteBuffer frame) {
