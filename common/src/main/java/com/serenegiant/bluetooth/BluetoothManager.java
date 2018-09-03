@@ -219,7 +219,7 @@ public class BluetoothManager {
 		 * Bluetooth機器探索結果が更新された時
 		 * @param devices
 		 */
-		public void onDiscover(final Collection<BluetoothDeviceInfo> devices);
+        void onDiscover(final Collection<BluetoothDeviceInfo> devices);
 		/**
 		 * リモート機器と接続した時
 		 * #startListenによる接続待ち中にリモート機器から接続されたか
@@ -227,21 +227,21 @@ public class BluetoothManager {
 		 * @param name
 		 * @param remoteAddr
 		 */
-		public void onConnect(final String name, final String remoteAddr);
+        void onConnect(final String name, final String remoteAddr);
 		/**
 		 * リモート機器との接続が解除された時
 		 */
-		public void onDisconnect();
+        void onDisconnect();
 		/**
 		 * リモート機器への接続要求が失敗した時(#connectの呼び出しが失敗した時)
 		 */
-		public void onFailed();
+        void onFailed();
 		/**
 		 * データを受信した時
 		 * @param message
 		 * @param length
 		 */
-		public void onReceive(final byte[] message, final int length);
+        void onReceive(final byte[] message, final int length);
 	}
 
 	@NonNull private final Object mSync = new Object();

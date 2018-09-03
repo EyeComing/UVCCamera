@@ -25,5 +25,5 @@ public interface ResolutionValidator {
 	 * @param height
 	 * @return 使用できればtrue, 使用できなければfalse
 	 */
-	public boolean validate(int width, int height);
+    boolean validate(int width, int height);
 }

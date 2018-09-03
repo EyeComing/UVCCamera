@@ -26,30 +26,30 @@ public interface IRenderer extends IRendererCommon {
 	/**
 	 * 関係するすべてのリソースを開放する。再利用できない
 	 */
-	public void release();
+    void release();
 
 	/**
 	 * 描画先のSurfaceをセット
 	 * @param surface
 	 */
-	public void setSurface(final Surface surface);
+    void setSurface(final Surface surface);
 
 	/**
 	 * 描画先のSurfaceをセット
 	 * @param surface
 	 */
-	public void setSurface(final SurfaceTexture surface);
+    void setSurface(final SurfaceTexture surface);
 
 	/**
 	 * Surfaceサイズを変更
 	 * @param width
 	 * @param height
 	 */
-	public void resize(final int width, final int height);
+    void resize(final int width, final int height);
 
 	/**
 	 * 描画要求
 	 * @param args
 	 */
-	public void requestRender(final Object... args);
+    void requestRender(final Object... args);
 }

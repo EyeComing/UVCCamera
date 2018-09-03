@@ -35,8 +35,8 @@ public class MessageDialogFragmentV4 extends DialogFragment {
 //	private static final boolean DEBUG = false;	// FIXME 実働時はfalseにすること
 	private static final String TAG = MessageDialogFragmentV4.class.getSimpleName();
 
-	public static interface MessageDialogListener {
-		public void onMessageDialogResult(final MessageDialogFragmentV4 dialog, final int requestCode, final String[] permissions, final boolean result);
+	public interface MessageDialogListener {
+		void onMessageDialogResult(final MessageDialogFragmentV4 dialog, final int requestCode, final String[] permissions, final boolean result);
 	}
 
 	public static MessageDialogFragmentV4 showDialog(final FragmentActivity parent, final int requestCode, final int id_title, final int id_message, final String[] permissions) {

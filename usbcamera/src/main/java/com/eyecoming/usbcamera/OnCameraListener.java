@@ -1,5 +1,7 @@
 package com.eyecoming.usbcamera;
 
+import android.hardware.usb.UsbDevice;
+
 import com.serenegiant.usb.USBMonitor.UsbControlBlock;
 import com.serenegiant.usb.UVCCamera;
 
@@ -10,15 +12,29 @@ import com.serenegiant.usb.UVCCamera;
 public interface OnCameraListener {
 
     /**
-     * usb相机连接成功
+     * USB相机连接成功
      *
-     * @param camera    UVCCanera
+     * @param camera    UVCCamera
      * @param ctrlBlock usb控制模块
      */
     void connected(UVCCamera camera, UsbControlBlock ctrlBlock);
 
     /**
-     * usb相机断开连接
+     * USB相机断开连接
      */
     void disconnect();
+
+    /**
+     * USB 设备连接
+     *
+     * @param device UsbDevice
+     */
+    void onAttach(UsbDevice device);
+
+    /**
+     * USB 设备断开连接
+     *
+     * @param device UsbDevice
+     */
+    void onDettach(UsbDevice device);
 }

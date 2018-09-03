@@ -38,7 +38,7 @@ public class ValueSelectorAdapter extends ArrayAdapter<ValueSelectorAdapter.Valu
 	private static final String TAG = ValueSelectorAdapter.class.getSimpleName();
 
 	public interface ValueSelectorAdapterListener {
-		public void onTouch(final View view, final MotionEvent event, final int position);
+		void onTouch(final View view, final MotionEvent event, final int position);
 	}
 
 	public static class ValueEntry {
@@ -91,13 +91,13 @@ public class ValueSelectorAdapter extends ArrayAdapter<ValueSelectorAdapter.Valu
 				holder.titleTv = (TextView)rootView;
 			} else {
 				try {
-					holder.titleTv = (TextView) rootView.findViewById(mTitleId);
+					holder.titleTv = rootView.findViewById(mTitleId);
 				} catch (final Exception e) {
 					holder.titleTv = null;
 				}
 				if (holder.titleTv == null) {
 					try {
-						holder.titleTv = (TextView) rootView.findViewById(R.id.title);
+						holder.titleTv = rootView.findViewById(R.id.title);
 					} catch (final Exception e) {
 						holder.titleTv = null;
 					}

@@ -86,30 +86,30 @@ public final class USBMonitor {
 		 * called when device attached
 		 * @param device
 		 */
-		public void onAttach(UsbDevice device);
+        void onAttach(UsbDevice device);
 		/**
 		 * called when device dettach(after onDisconnect)
 		 * @param device
 		 */
-		public void onDettach(UsbDevice device);
+        void onDettach(UsbDevice device);
 		/**
 		 * called after device opend
 		 * @param device
 		 * @param ctrlBlock
 		 * @param createNew
 		 */
-		public void onConnect(UsbDevice device, UsbControlBlock ctrlBlock, boolean createNew);
+        void onConnect(UsbDevice device, UsbControlBlock ctrlBlock, boolean createNew);
 		/**
 		 * called when USB device removed or its power off (this callback is called after device closing)
 		 * @param device
 		 * @param ctrlBlock
 		 */
-		public void onDisconnect(UsbDevice device, UsbControlBlock ctrlBlock);
+        void onDisconnect(UsbDevice device, UsbControlBlock ctrlBlock);
 		/**
 		 * called when canceled or could not get permission from user
 		 * @param device
 		 */
-		public void onCancel(UsbDevice device);
+        void onCancel(UsbDevice device);
 	}
 
 	public USBMonitor(final Context context, final OnDeviceConnectListener listener) {

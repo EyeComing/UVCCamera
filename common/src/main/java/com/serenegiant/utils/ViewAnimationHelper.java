@@ -40,9 +40,9 @@ public class ViewAnimationHelper {
 	public static final int ANIMATION_ZOOM_OUT = 3;
 
 	public interface ViewAnimationListener {
-		public void onAnimationStart(@NonNull final Animator animator, @NonNull final View target, final int animationType);
-		public void onAnimationEnd(@NonNull final Animator animator, @NonNull final View target, final int animationType);
-		public void onAnimationCancel(@NonNull final Animator animator, @NonNull final View target, final int animationType);
+		void onAnimationStart(@NonNull final Animator animator, @NonNull final View target, final int animationType);
+		void onAnimationEnd(@NonNull final Animator animator, @NonNull final View target, final int animationType);
+		void onAnimationCancel(@NonNull final Animator animator, @NonNull final View target, final int animationType);
 	}
 
 	/**

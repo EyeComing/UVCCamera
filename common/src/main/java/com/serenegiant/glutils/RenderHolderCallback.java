@@ -24,7 +24,7 @@ import android.view.Surface;
  * RenderHolderのコールバックリスナー
  */
 public interface RenderHolderCallback {
-	public void onCreate(Surface surface);
-	public void onFrameAvailable();
-	public void onDestroy();
+	void onCreate(Surface surface);
+	void onFrameAvailable();
+	void onDestroy();
 }

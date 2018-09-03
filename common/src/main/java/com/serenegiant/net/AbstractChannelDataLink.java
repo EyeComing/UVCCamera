@@ -44,10 +44,10 @@ public abstract class AbstractChannelDataLink {
 	private static final Charset UTF8 = Charset.forName("UTF-8");
 
 	public interface Callback {
-		public void onConnect(final AbstractClient client);
-		public void onDisconnect();
-		public void onReceive(final AbstractClient client, @Nullable final Object msg);
-		public void onError(final AbstractClient client, final Exception e);
+		void onConnect(final AbstractClient client);
+		void onDisconnect();
+		void onReceive(final AbstractClient client, @Nullable final Object msg);
+		void onError(final AbstractClient client, final Exception e);
 	}
 	
 	private static final int REQ_RELEASE = -9;
@@ -498,8 +498,7 @@ public abstract class AbstractChannelDataLink {
 		 * @throws IOException
 		 * @throws ClassNotFoundException
 		 */
-		private void doReceiveLoop()
-			throws IOException, ClassNotFoundException {
+		private void doReceiveLoop() {
 			
 			if (DEBUG) {
                 Log.v(TAG, "Client#doReceiveLoop:");

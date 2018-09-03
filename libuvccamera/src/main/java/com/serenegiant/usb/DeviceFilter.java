@@ -483,33 +483,13 @@ public final class DeviceFilter {
 		}
 		if (obj instanceof UsbDevice) {
 			final UsbDevice device = (UsbDevice) obj;
-			if (isExclude
-					|| (device.getVendorId() != mVendorId)
-					|| (device.getProductId() != mProductId)
-					|| (device.getDeviceClass() != mClass)
-					|| (device.getDeviceSubclass() != mSubclass)
-					|| (device.getDeviceProtocol() != mProtocol) ) {
-				return false;
-			}
-/*			if ((mManufacturerName != null && device.getManufacturerName() == null)
-					|| (mManufacturerName == null && device
-							.getManufacturerName() != null)
-					|| (mProductName != null && device.getProductName() == null)
-					|| (mProductName == null && device.getProductName() != null)
-					|| (mSerialNumber != null && device.getSerialNumber() == null)
-					|| (mSerialNumber == null && device.getSerialNumber() != null)) {
-				return (false);
-			} */
-/*			if ((device.getManufacturerName() != null && !mManufacturerName
-					.equals(device.getManufacturerName()))
-					|| (device.getProductName() != null && !mProductName
-							.equals(device.getProductName()))
-					|| (device.getSerialNumber() != null && !mSerialNumber
-							.equals(device.getSerialNumber()))) {
-				return (false);
-			} */
-			return true;
-		}
+            return !isExclude
+                    && (device.getVendorId() == mVendorId)
+                    && (device.getProductId() == mProductId)
+                    && (device.getDeviceClass() == mClass)
+                    && (device.getDeviceSubclass() == mSubclass)
+                    && (device.getDeviceProtocol() == mProtocol);
+        }
 		return false;
 	}
 

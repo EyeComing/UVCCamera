@@ -110,7 +110,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
 
     protected UVCCamera getUvcCamera() {
         final CameraThread thread = mWeakThread.get();
-        return thread != null ? thread.mUVCCamera : null;
+        return thread != null ? thread.getUVCCamera() : null;
     }
 
     /**
@@ -1034,6 +1034,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
                     mCallbacks.remove(callback);
                     Log.w(TAG, e);
                 }
+            }
+        }
+
+        public UVCCamera getUVCCamera() {
+            synchronized (mSync) {
+                return mUVCCamera;
             }
         }
     }

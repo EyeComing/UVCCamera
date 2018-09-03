@@ -137,6 +137,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         @Override
         public void onAttach(UsbDevice device) {
             Log.i(TAG, "attach");
+            if (mListener != null) {
+                mListener.onAttach(device);
+            }
             if (!isAttached) {
                 isAttached = true;
                 if (!mAutoConnect) {
@@ -191,6 +194,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         @Override
         public void onDettach(final UsbDevice device) {
             Log.i(TAG, "dettach");
+            if (mListener != null) {
+                mListener.onDettach(device);
+            }
             if (mUVCCamera != null) {
                 mUVCCamera.close();
                 mUVCCamera = null;

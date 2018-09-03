@@ -31,12 +31,12 @@ public class DumbRenderer implements IRenderer {
 	private static final String TAG = DumbRenderer.class.getSimpleName();
 
 	public interface RendererDelegater {
-		public void onStart(final EGLBase eglBase);
-		public void onStop(final EGLBase eglBase);
-		public void onSetSurface(final EGLBase eglBase, final Object surface);
-		public void onResize(final EGLBase eglBase, final int width, final int height);
-		public void onDraw(final EGLBase eglBase, final Object... args);
-		public void onMirror(final EGLBase eglBase, final int mirror);
+		void onStart(final EGLBase eglBase);
+		void onStop(final EGLBase eglBase);
+		void onSetSurface(final EGLBase eglBase, final Object surface);
+		void onResize(final EGLBase eglBase, final int width, final int height);
+		void onDraw(final EGLBase eglBase, final Object... args);
+		void onMirror(final EGLBase eglBase, final int mirror);
 	}
 
 	/** レンダリングスレッドの排他制御用オブジェクト */

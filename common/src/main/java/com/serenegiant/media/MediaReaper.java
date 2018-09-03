@@ -50,12 +50,12 @@ public abstract class MediaReaper implements Runnable {
 	public static final int TIMEOUT_USEC = 10000;	// 10ミリ秒
 
 	public interface ReaperListener {
-		public void writeSampleData(@NonNull final MediaReaper reaper,
-			final ByteBuffer byteBuf, final MediaCodec.BufferInfo bufferInfo);
-		public void onOutputFormatChanged(@NonNull final MediaReaper reaper,
-			@NonNull final MediaFormat format);
-		public void onStop(@NonNull final MediaReaper reaper);
-		public void onError(@NonNull final MediaReaper reaper, final Exception e);
+		void writeSampleData(@NonNull final MediaReaper reaper,
+                             final ByteBuffer byteBuf, final MediaCodec.BufferInfo bufferInfo);
+		void onOutputFormatChanged(@NonNull final MediaReaper reaper,
+                                   @NonNull final MediaFormat format);
+		void onStop(@NonNull final MediaReaper reaper);
+		void onError(@NonNull final MediaReaper reaper, final Exception e);
 	}
 
 	public static class VideoReaper extends MediaReaper {

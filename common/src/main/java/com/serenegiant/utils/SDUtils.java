@@ -59,8 +59,8 @@ public class SDUtils {
 	 * Storage Access Framework関係の処理を行うためのdelegater
 	 */
 	public interface handleOnResultDelegater {
-		public boolean onResult(final int requestCode, final Uri uri, final Intent data);
-		public void onFailed(final int requestCode, final Intent data);
+		boolean onResult(final int requestCode, final Uri uri, final Intent data);
+		void onFailed(final int requestCode, final Intent data);
 	}
 	
 	/**
@@ -613,7 +613,7 @@ public class SDUtils {
 
 //================================================================================
 	public interface FileFilter {
-		public boolean accept(@NonNull final DocumentFile file);
+		boolean accept(@NonNull final DocumentFile file);
 	}
 	
 	/**
@@ -720,7 +720,7 @@ public class SDUtils {
 	@NonNull
 	public static Collection<DocumentFile> listFiles(@NonNull final Context context,
 		@NonNull final DocumentFile dir,
-		@Nullable final FileFilter filter) throws IOException {
+		@Nullable final FileFilter filter) {
 
 		final Collection<DocumentFile> result = new ArrayList<DocumentFile>();
 		if (dir.isDirectory()) {

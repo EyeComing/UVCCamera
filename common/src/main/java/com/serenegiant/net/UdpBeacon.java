@@ -60,12 +60,12 @@ public class UdpBeacon {
 		 * @param remote ビーコンのアドレス文字列
 		 * @param remote_port ビーコンのポート番号
 		 */
-		public void onReceiveBeacon(final UUID uuid, final String remote, final int remote_port);
+        void onReceiveBeacon(final UUID uuid, final String remote, final int remote_port);
 		/**
 		 * エラー発生時の処理
 		 * @param e
 		 */
-		public void onError(final Exception e);
+        void onError(final Exception e);
 	}
 
 	/**

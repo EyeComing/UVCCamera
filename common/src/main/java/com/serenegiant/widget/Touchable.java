@@ -18,6 +18,6 @@ package com.serenegiant.widget;
  *  limitations under the License.
 */
 public interface Touchable {
-	public float touchX();
-	public float touchY();
+	float touchX();
+	float touchY();
 }

@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
  * 書き込み可能クラスを示すインターフェース
  */
 public interface IWritable extends Closeable {
-	public void write(final ByteBuffer src) throws IOException;
-	public void write(final byte[] b, final int off, final int len) throws IOException;
-	public void flush() throws IOException;
+	void write(final ByteBuffer src) throws IOException;
+	void write(final byte[] b, final int off, final int len) throws IOException;
+	void flush() throws IOException;
 }

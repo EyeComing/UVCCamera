@@ -26,8 +26,8 @@ import java.nio.ByteBuffer;
  * 読み込み可能なクラスを示すインターフェース
  */
 public interface IReadable extends Closeable {
-	public int read(final ByteBuffer dst) throws IOException;
-	public int read(final byte[] b, final int off, final int len) throws IOException;
-	public int available() throws IOException;
-	public long skip(final long n) throws IOException;
+	int read(final ByteBuffer dst) throws IOException;
+	int read(final byte[] b, final int off, final int len) throws IOException;
+	int available() throws IOException;
+	long skip(final long n) throws IOException;
 }

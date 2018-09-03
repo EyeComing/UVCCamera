@@ -24,25 +24,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public interface IRendererCommon {
-	public static final int MIRROR_NORMAL = 0;
-	public static final int MIRROR_HORIZONTAL = 1;
-	public static final int MIRROR_VERTICAL = 2;
-	public static final int MIRROR_BOTH = 3;
-	public static final int MIRROR_NUM = 4;
+	int MIRROR_NORMAL = 0;
+	int MIRROR_HORIZONTAL = 1;
+	int MIRROR_VERTICAL = 2;
+	int MIRROR_BOTH = 3;
+	int MIRROR_NUM = 4;
 
 	@IntDef({MIRROR_NORMAL, MIRROR_HORIZONTAL, MIRROR_VERTICAL, MIRROR_BOTH})
 	@Retention(RetentionPolicy.SOURCE)
-	public @interface MirrorMode {}
+    @interface MirrorMode {}
 
 	/**
 	 * 映像を上下左右反転させるかどうかをセット
 	 * @param mirror 0:通常, 1:左右反転, 2:上下反転, 3:上下左右反転
 	 */
-	public void setMirror(@MirrorMode final int mirror);
+    void setMirror(@MirrorMode final int mirror);
 	
 	/**
 	 * 映像を上下左右反転させるかどうかを取得
 	 * @return 0:通常, 1:左右反転, 2:上下反転, 3:上下左右反転
 	 */
-	public @MirrorMode int getMirror();
+	@MirrorMode int getMirror();
 }

@@ -107,8 +107,8 @@ public class MediaStoreImageAdapter extends PagerAdapter {
 			if (holder == null) {
 				holder = new ViewHolder();
 			}
-			final TextView tv = holder.mTitleView = (TextView)view.findViewById(R.id.title);
-			final ImageView iv = holder.mImageView = (ImageView)view.findViewById(R.id.thumbnail);
+			final TextView tv = holder.mTitleView = view.findViewById(R.id.title);
+			final ImageView iv = holder.mImageView = view.findViewById(R.id.thumbnail);
 			if (holder.info == null) {
 				holder.info = new MediaStoreHelper.MediaInfo();
 			}

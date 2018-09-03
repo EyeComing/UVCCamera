@@ -48,12 +48,12 @@ public class ByteChannelWrapper implements IReadable, IWritable {
 	}
 	
 	@Override
-	public int available() throws IOException {
+	public int available() {
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public long skip(final long n) throws IOException {
+	public long skip(final long n) {
 		// FIXME 未実装, ダミー読み込みをする
 		throw new UnsupportedOperationException();
 	}
@@ -70,7 +70,7 @@ public class ByteChannelWrapper implements IReadable, IWritable {
 	}
 	
 	@Override
-	public void flush() throws IOException {
+	public void flush() {
 		// do nothing
 	}
 	

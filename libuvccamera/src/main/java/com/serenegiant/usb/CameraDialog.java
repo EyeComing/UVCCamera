@@ -52,8 +52,8 @@ public class CameraDialog extends DialogFragment {
 	private static final String TAG = CameraDialog.class.getSimpleName();
 
 	public interface CameraDialogParent {
-		public USBMonitor getUSBMonitor();
-		public void onDialogResult(boolean canceled);
+		USBMonitor getUSBMonitor();
+		void onDialogResult(boolean canceled);
 	}
 	
 	/**
@@ -140,7 +140,7 @@ public class CameraDialog extends DialogFragment {
 	 */
 	private final View initView() {
 		final View rootView = getActivity().getLayoutInflater().inflate(R.layout.dialog_camera, null);
-		mSpinner = (Spinner)rootView.findViewById(R.id.spinner1);
+		mSpinner = rootView.findViewById(R.id.spinner1);
 		final View empty = rootView.findViewById(android.R.id.empty);
 		mSpinner.setEmptyView(empty);
 		return rootView;
@@ -151,7 +151,7 @@ public class CameraDialog extends DialogFragment {
 	public void onResume() {
 		super.onResume();
 		updateDevices();
-	    final Button button = (Button)getDialog().findViewById(android.R.id.button3);
+	    final Button button = getDialog().findViewById(android.R.id.button3);
 	    if (button != null) {
 	    	button.setOnClickListener(mOnClickListener);
 	    }

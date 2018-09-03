@@ -26,15 +26,15 @@ import org.json.JSONObject;
 public class IEnum {
 
 	public interface EnumInterface {
-		public int id();
-		public String label();
-		public String name();
-		public int ordinal();
+		int id();
+		String label();
+		String name();
+		int ordinal();
 	}
 
 	public interface EnumInterfaceEx extends EnumInterface {
-		public void put(final JSONObject json) throws JSONException;
-		public void put(final String key, final JSONObject json) throws JSONException;
+		void put(final JSONObject json) throws JSONException;
+		void put(final String key, final JSONObject json) throws JSONException;
 	}
 
 	/**

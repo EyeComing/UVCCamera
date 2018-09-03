@@ -22,6 +22,6 @@ package com.serenegiant.widget;
 import android.view.TextureView;
 
 public interface ITextureView {
-	public void register(final TextureView.SurfaceTextureListener callback);
-	public void unregister(final TextureView.SurfaceTextureListener callback);
+	void register(final TextureView.SurfaceTextureListener callback);
+	void unregister(final TextureView.SurfaceTextureListener callback);
 }

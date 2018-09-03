@@ -51,7 +51,7 @@ public class MultilineLabelPreference extends Preference {
 			}
 		} */
 		try {
-			final TextView summary = (TextView)view.findViewById(android.R.id.summary);
+			final TextView summary = view.findViewById(android.R.id.summary);
 			summary.setSingleLine(false);
 		} catch (final Exception e) {
 		}

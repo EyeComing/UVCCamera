@@ -130,8 +130,8 @@ public class NetworkChangedReceiver extends BroadcastReceiver {
 		 * @param isConnected read/write可能
 		 * @param activeNetworkMask アクティブなネットワークの選択マスク 接続しているネットワークがなければ0
 		 */
-		public void onNetworkChanged(
-			final int isConnectedOrConnecting, final int isConnected, final int activeNetworkMask);
+        void onNetworkChanged(
+                final int isConnectedOrConnecting, final int isConnected, final int activeNetworkMask);
 	}
 
 	public static void enable(final Context context) {

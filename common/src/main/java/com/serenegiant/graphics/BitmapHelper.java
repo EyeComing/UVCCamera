@@ -261,7 +261,7 @@ public final class BitmapHelper {
 	 * @throws FileNotFoundException
 	 */
 	public static Bitmap asBitmap(final ContentResolver cr, final Uri uri)
-		throws FileNotFoundException, IOException {
+		throws IOException {
 
 		Bitmap bitmap= null;
 		if (uri != null) {
@@ -297,7 +297,7 @@ public final class BitmapHelper {
 	 * @throws FileNotFoundException
 	 */
 	public static Bitmap asBitmap(final ContentResolver cr, final Uri uri, final int requestWidth, final int requestHeight)
-		throws FileNotFoundException, IOException {
+		throws IOException {
 
 		Bitmap bitmap = null;
 		if (uri != null) {
@@ -348,7 +348,7 @@ public final class BitmapHelper {
 	 * @throws FileNotFoundException
 	 */
 	public static Bitmap asBitmapStrictSize(final ContentResolver cr, final Uri uri, final int requestWidth, final int requestHeight)
-		throws FileNotFoundException, IOException {
+		throws IOException {
 
 		Bitmap bitmap = null;
 		if (uri != null) {

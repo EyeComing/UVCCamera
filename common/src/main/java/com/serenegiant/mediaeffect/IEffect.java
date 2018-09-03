@@ -23,13 +23,13 @@ import android.support.annotation.NonNull;
 import com.serenegiant.glutils.TextureOffscreen;
 
 public interface IEffect {
-	public void apply(@NonNull final int[] src_tex_ids,
-		final int width, final int height, final int out_tex_id);
-	public void apply(@NonNull final int[] src_tex_ids,
-		@NonNull final TextureOffscreen output);
-	public void apply(ISource src);
-	public void release();
-	public IEffect resize(final int width, final int height);
-	public boolean enabled();
-	public IEffect setEnable(final boolean enable);
+	void apply(@NonNull final int[] src_tex_ids,
+               final int width, final int height, final int out_tex_id);
+	void apply(@NonNull final int[] src_tex_ids,
+               @NonNull final TextureOffscreen output);
+	void apply(ISource src);
+	void release();
+	IEffect resize(final int width, final int height);
+	boolean enabled();
+	IEffect setEnable(final boolean enable);
 }

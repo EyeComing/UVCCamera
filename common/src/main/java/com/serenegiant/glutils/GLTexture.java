@@ -185,7 +185,7 @@ public class GLTexture implements ITexture {
 	 * @param filePath
 	 */
 	@Override
-	public void loadTexture(final String filePath) throws NullPointerException, IOException {
+	public void loadTexture(final String filePath) throws NullPointerException {
 //		if (DEBUG) Log.v(TAG, "loadTexture:path=" + filePath);
 		if (TextUtils.isEmpty(filePath)) {
             throw new NullPointerException("image file path should not be a null");

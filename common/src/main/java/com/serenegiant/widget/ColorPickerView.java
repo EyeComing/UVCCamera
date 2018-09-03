@@ -134,7 +134,7 @@ public class ColorPickerView extends View {
 	private float mSat = 0.0f;
 
 	public interface ColorPickerListener {
-		public void onColorChanged(ColorPickerView view, int color);
+		void onColorChanged(ColorPickerView view, int color);
 	}
 
 	public ColorPickerView(final Context context) {
@@ -465,8 +465,8 @@ public class ColorPickerView extends View {
 		if (mShowAlphaSlider != showAlpha) {
 			mShowAlphaSlider = showAlpha;
 			postInvalidate();
-		};
-	}
+		}
+    }
 
 	/**
 	 * アルファ値変更用のスライダーを表示するかどうかを取得

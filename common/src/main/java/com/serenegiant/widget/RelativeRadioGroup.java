@@ -328,7 +328,7 @@ public class RelativeRadioGroup extends RelativeLayout {
          * @param group the group in which the checked radio button has changed
          * @param checkedId the unique identifier of the newly checked radio button
          */
-        public void onCheckedChanged(RelativeRadioGroup group, int checkedId);
+        void onCheckedChanged(RelativeRadioGroup group, int checkedId);
     }
 
     private class CheckedStateTracker implements CompoundButton.OnCheckedChangeListener {

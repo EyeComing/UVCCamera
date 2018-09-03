@@ -104,18 +104,18 @@ public abstract class EGLBase {
 	 * EGLレンダリングコンテキストに紐付ける描画オブジェクト
 	 */
 	public interface IEglSurface {
-		public void makeCurrent();
-		public void swap();
+		void makeCurrent();
+		void swap();
 
-		public IContext getContext();
+		IContext getContext();
 		/**
 		 * swap with presentation time[ns]
 		 * only works well now when using EGLBase14
 		 * @param presentationTimeNs
 		 */
-		public void swap(final long presentationTimeNs);
-		public void release();
-		public boolean isValid();
+        void swap(final long presentationTimeNs);
+		void release();
+		boolean isValid();
 	}
 
 	public static boolean isEGL14Supported() {
