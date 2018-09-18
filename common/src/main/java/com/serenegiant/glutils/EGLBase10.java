@@ -41,7 +41,8 @@ import com.serenegiant.utils.BuildCheck;
 /**
  * EGLレンダリングコンテキストを生成＆使用するためのヘルパークラス
  */
-/*package*/ class EGLBase10 extends EGLBase {
+/*package*/
+public class EGLBase10 extends EGLBase {
 //	private static final boolean DEBUG = false;	// FIXME set false on release
 	private static final String TAG = "EGLBase10";
 
@@ -61,6 +62,10 @@ import com.serenegiant.utils.BuildCheck;
 
 		private Context(final EGLContext context) {
 			eglContext = context;
+		}
+
+		public EGLContext getEglContext() {
+			return eglContext;
 		}
 	}
 

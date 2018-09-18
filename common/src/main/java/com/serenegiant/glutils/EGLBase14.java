@@ -41,7 +41,8 @@ import com.serenegiant.utils.BuildCheck;
  * EGLレンダリングコンテキストを生成＆使用するためのヘルパークラス
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-/*package*/ class EGLBase14 extends EGLBase {	// API >= 17
+/*package*/
+public class EGLBase14 extends EGLBase {	// API >= 17
 //	private static final boolean DEBUG = false;	// TODO set false on release
 	private static final String TAG = "EGLBase14";
 
@@ -60,10 +61,14 @@ import com.serenegiant.utils.BuildCheck;
 	public static class Context extends IContext {
 		public final EGLContext eglContext;
 
-		private Context(final EGLContext context) {
+		public Context(final EGLContext context) {
 			eglContext = context;
 		}
-	}
+
+        public EGLContext getEglContext() {
+            return eglContext;
+        }
+    }
 
 	public static class Config extends IConfig {
 		public final EGLConfig eglConfig;
