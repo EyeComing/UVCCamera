@@ -14,15 +14,15 @@ public interface OnCameraListener {
     /**
      * USB相机连接成功
      *
-     * @param camera    UVCCamera
+     * @param device    UsbDevice
      * @param ctrlBlock usb控制模块
      */
-    void connected(UVCCamera camera, UsbControlBlock ctrlBlock);
+    void connected(UsbDevice device, UsbControlBlock ctrlBlock);
 
     /**
      * USB相机断开连接
      */
-    void disconnect();
+    void disconnect(UsbDevice device, UsbControlBlock ctrlBlock);
 
     /**
      * USB 设备连接

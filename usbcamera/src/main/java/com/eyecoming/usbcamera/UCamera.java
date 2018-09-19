@@ -25,19 +25,12 @@ import java.util.concurrent.TimeUnit;
 
 public class UCamera implements CameraDialog.CameraDialogParent {
     private USBMonitor mUSBMonitor;
-    private UVCCamera mUVCCamera;
     private Context mContext;
     private OnCameraListener mListener;
     private boolean mAutoConnect;
     private USBMonitor.UsbControlBlock mControlBlock;
     private final static String TAG = "UCamera";
     private boolean isAttached = false;
-
-    private static final int CORE_POOL_SIZE = 1;
-    private static final int MAX_POOL_SIZE = 4;
-    private static final int KEEP_ALIVE_TIME = 10;
-
-    protected static final ThreadPoolExecutor EXECUTER = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
     /**
      * 初始化UCamera
@@ -70,7 +63,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      * @param autoConnect             是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
      * @param onDeviceConnectListener USBMonitor.OnDeviceConnectListener <br/>如果设置了监听,autoConnect不再起作用，所有操作将在OnDeviceConnectListener的回调中自行处理,
      *                                <br/>同时OnCameraListener也不再进行回调,即 {@link UCamera#setOnCameraListener(OnCameraListener)} 将无效
-     *                                <br/> {@link UCamera#getUVCCamera()} 和 {@link UCamera#getControlBlock()} 将返回null
+     *                                <br/> {@link UCamera#getControlBlock()} 将返回null
      * @deprecated 使用 {@link UCamera#UCamera(Context, USBMonitor.OnDeviceConnectListener)} 替代
      */
     public UCamera(Context context, boolean autoConnect, USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
@@ -88,7 +81,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      * @param context                 Context
      * @param onDeviceConnectListener USBMonitor.OnDeviceConnectListener
      *                                <br/>如果设置了该监听 {@link UCamera#setOnCameraListener(OnCameraListener)} 将无效
-     *                                <br/> {@link UCamera#getUVCCamera()} 和 {@link UCamera#getControlBlock()} 将返回null
+     *                                <br/> {@link UCamera#getControlBlock()} 将返回null
      */
     public UCamera(Context context, @NonNull USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
         this.mContext = context;
@@ -144,9 +137,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
                 isAttached = true;
                 if (!mAutoConnect) {
                     //选择摄像头
-                    if (mUVCCamera == null) {
-                        CameraDialog.showDialog((Activity) mContext);
-                    }
+                    CameraDialog.showDialog((Activity) mContext);
                 } else {
                     getFirstUsbCameraDevice();
                 }
@@ -156,33 +147,20 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         @Override
         public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
             Log.i(TAG, "USBMonitor connect");
-            if (mUVCCamera != null) {
-                mUVCCamera.destroy();
-            }
 
-            EXECUTER.execute(new Runnable() {
-                @Override
-                public void run() {
-                    mUVCCamera = new UVCCamera();
-                    mControlBlock = ctrlBlock;
-                    if (mListener != null) {
-                        mListener.connected(mUVCCamera, ctrlBlock);
-                    }
-                }
-            });
+            mControlBlock = ctrlBlock;
+            if (mListener != null) {
+                mListener.connected(device, ctrlBlock);
+            }
         }
 
         @Override
         public void onDisconnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock) {
             // XXX you should check whether the comming device equal to camera device that currently using
             Log.i(TAG, "USBMonitor disconnect");
-            if (mUVCCamera != null) {
-                mUVCCamera.close();
-                mUVCCamera = null;
-            }
 
             if (mListener != null) {
-                mListener.disconnect();
+                mListener.disconnect(device, ctrlBlock);
             }
         }
 
@@ -196,10 +174,6 @@ public class UCamera implements CameraDialog.CameraDialogParent {
             Log.i(TAG, "dettach");
             if (mListener != null) {
                 mListener.onDettach(device);
-            }
-            if (mUVCCamera != null) {
-                mUVCCamera.close();
-                mUVCCamera = null;
             }
             isAttached = false;
         }
@@ -256,15 +230,6 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     @Override
     public void onDialogResult(boolean b) {
 
-    }
-
-    /**
-     * 获取UVCCamera
-     *
-     * @return UVCCamera
-     */
-    public UVCCamera getUVCCamera() {
-        return mUVCCamera;
     }
 
     /**
