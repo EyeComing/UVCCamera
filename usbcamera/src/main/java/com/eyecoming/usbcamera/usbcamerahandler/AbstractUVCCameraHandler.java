@@ -41,6 +41,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.eyecoming.usbcamera.R;
+import com.eyecoming.usbcamera.impl.CameraCallback;
 import com.eyecoming.usbcamera.widget.CameraViewInterface;
 import com.eyecoming.usbcamera.encoder.MediaAudioEncoder;
 import com.eyecoming.usbcamera.encoder.MediaEncoder;
@@ -73,22 +74,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 abstract class AbstractUVCCameraHandler extends Handler {
     private static final boolean DEBUG = true;
     private static final String TAG = "AbsUVCCameraHandler";
-
-    public interface CameraCallback {
-        void onOpen();
-
-        void onClose();
-
-        void onStartPreview();
-
-        void onStopPreview();
-
-        void onStartRecording();
-
-        void onStopRecording();
-
-        void onError(final Exception e);
-    }
 
     private static final int MSG_OPEN = 0;
     private static final int MSG_CLOSE = 1;
@@ -963,7 +948,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
         private void callOnOpen() {
             for (final CameraCallback callback : mCallbacks) {
                 try {
-                    callback.onOpen();
+                    callback.onOpen(mUVCCamera);
                 } catch (final Exception e) {
                     mCallbacks.remove(callback);
                     Log.w(TAG, e);
