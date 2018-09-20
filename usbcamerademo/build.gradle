@@ -31,8 +31,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     //下面四个必须要
-    implementation "com.android.support:support-v4:28.0.0-alpha3"
-    implementation(name: 'common', ext: 'aar')
-    implementation(name: 'libuvccamera', ext: 'aar')
-    implementation(name: 'usbcamera', ext: 'aar')
+//    implementation "com.android.support:support-v4:28.0.0-alpha3"
+//    implementation(name: 'common', ext: 'aar')
+//    implementation(name: 'libuvccamera', ext: 'aar')
+//    implementation(name: 'usbcamera', ext: 'aar')
+    implementation project(':usbcamera')
 }
