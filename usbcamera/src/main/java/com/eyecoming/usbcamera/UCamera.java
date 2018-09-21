@@ -190,7 +190,29 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         UsbDevice device = null;
 
         if (deviceList.size() > 0) {
-            //默认去第一个摄像头
+            //默认取第一个摄像头
+            device = deviceList.get(0);
+            boolean result = mUSBMonitor.requestPermission(device);
+            if (result) {
+                // when failed. your device may not support USB.
+                Log.d(TAG, "your device may not support USB");
+            }
+        }
+        return device;
+    }
+
+    /**
+     * 根据USB设备过滤文件请求第一个可用USB摄像头
+     *
+     * @param deviceFilterId 摄像头过滤文件ID(只限xml文件夹)
+     * @return UsbDevice
+     */
+    public UsbDevice getFirstUsbCameraDevice(int deviceFilterId) {
+        List<UsbDevice> deviceList = getUsbDevices(deviceFilterId);
+        UsbDevice device = null;
+
+        if (deviceList.size() > 0) {
+            //默认取第一个摄像头
             device = deviceList.get(0);
             boolean result = mUSBMonitor.requestPermission(device);
             if (result) {
@@ -211,9 +233,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 获取USB摄像头列表
+     * 根据USB设备过滤文件获取USB摄像头列表
      *
-     * @param deviceFilterId 摄像头过滤文件
+     * @param deviceFilterId 摄像头过滤文件ID(只限xml文件夹)
      * @return List&lt;UsbDevice&gt;USB摄像头列表
      */
     public List<UsbDevice> getUsbDevices(int deviceFilterId) {
