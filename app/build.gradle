@@ -31,5 +31,6 @@ dependencies {
     implementation(name: 'common', ext: 'aar')
     implementation(name: 'libuvccamera', ext: 'aar')
     implementation(name: 'usbcamera', ext: 'aar')
+    implementation(name: 'deepvuesdk', ext: 'aar')
 //    implementation project(':usbcamera')
 }
