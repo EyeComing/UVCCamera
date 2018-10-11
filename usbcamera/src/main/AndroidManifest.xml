@@ -21,4 +21,17 @@
   ~  may have a different license, see the respective files.
   -->
 
-<manifest package="com.eyecoming.usbcamera" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.eyecoming.usbcamera">
+
+    <application>
+        <service
+            android:name=".service.UVCService"
+            android:process=":uvcservice">
+            <intent-filter>
+                <action android:name=".service.IUVCService" />
+                <action android:name=".IUVCSlaveService" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>
