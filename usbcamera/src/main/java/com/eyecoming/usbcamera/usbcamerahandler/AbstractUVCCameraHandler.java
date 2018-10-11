@@ -85,6 +85,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
     private static final int MSG_MEDIA_UPDATE = 7;
     private static final int MSG_RELEASE = 9;
     private static final int MSG_FRAME_CALLBACK = 10;
+    private static final int MSG_PREVIEW_RESTART = 11;
 
     private final WeakReference<AbstractUVCCameraHandler.CameraThread> mWeakThread;
     private volatile boolean mReleased;
@@ -212,6 +213,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
         throw new UnsupportedOperationException("does not support now");
     }
 
+    /**
+     * 设置帧回调
+     *
+     * @param callback    回调
+     * @param pixelFormat 帧图像格式
+     */
     protected void setFrameCallback(IFrameCallback callback, int pixelFormat) {
         Message message = new Message();
         message.what = MSG_FRAME_CALLBACK;
@@ -220,12 +227,26 @@ abstract class AbstractUVCCameraHandler extends Handler {
         sendMessage(message);
     }
 
+    /**
+     * 开始预览
+     *
+     * @param surface 预览
+     */
     protected void startPreview(final Object surface) {
         checkReleased();
         if (!((surface instanceof SurfaceHolder) || (surface instanceof Surface) || (surface instanceof SurfaceTexture))) {
             throw new IllegalArgumentException("surface should be one of SurfaceHolder, Surface or SurfaceTexture");
         }
         sendMessage(obtainMessage(MSG_PREVIEW_START, surface));
+    }
+
+    /**
+     * 重新预览<br/>
+     * 前提是Camera对象和Surface对象没有变动
+     */
+    public void restartPreview() {
+        checkReleased();
+        sendEmptyMessage(MSG_PREVIEW_RESTART);
     }
 
     /**
@@ -364,6 +385,26 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 return camera.getBrightness();
             } else if (flag == UVCCamera.PU_CONTRAST) {
                 return camera.getContrast();
+            } else if (flag == UVCCamera.PU_EXPOSURE) {
+                return camera.getExposure();
+            } else if (flag == UVCCamera.PU_EXPOSURE_REL) {
+                return camera.getExposureRel();
+            } else if (flag == UVCCamera.PU_EXPOSURE_PRIORITY) {
+                return camera.getExposurePriority();
+            } else if (flag == UVCCamera.PU_HUE) {
+                return camera.getHue();
+            } else if (flag == UVCCamera.PU_SATURATION) {
+                return camera.getSaturation();
+            } else if (flag == UVCCamera.PU_SHARPNESS) {
+                return camera.getSharpness();
+            } else if (flag == UVCCamera.PU_GAMMA) {
+                return camera.getGamma();
+            } else if (flag == UVCCamera.PU_WB_TEMP) {
+                return camera.getWhiteBlance();
+            } else if (flag == UVCCamera.PU_GAIN) {
+                return camera.getGain();
+            } else if (flag == UVCCamera.PU_POWER_LF) {
+                return camera.getPowerlineFrequency();
             }
         }
         throw new IllegalStateException();
@@ -387,6 +428,36 @@ abstract class AbstractUVCCameraHandler extends Handler {
             } else if (flag == UVCCamera.PU_CONTRAST) {
                 camera.setContrast(value);
                 return camera.getContrast();
+            } else if (flag == UVCCamera.PU_EXPOSURE) {
+                camera.setExposure(value);
+                return camera.getExposure();
+            } else if (flag == UVCCamera.PU_EXPOSURE_REL) {
+                camera.setExposureRel(value);
+                return camera.getExposure();
+            } else if (flag == UVCCamera.PU_EXPOSURE_PRIORITY) {
+                camera.setExposurePriority(value);
+                return camera.getExposure();
+            } else if (flag == UVCCamera.PU_HUE) {
+                camera.setHue(value);
+                return camera.getHue();
+            } else if (flag == UVCCamera.PU_SATURATION) {
+                camera.setSaturation(value);
+                return camera.getSaturation();
+            } else if (flag == UVCCamera.PU_SHARPNESS) {
+                camera.setSharpness(value);
+                return camera.getSharpness();
+            } else if (flag == UVCCamera.PU_GAMMA) {
+                camera.setGamma(value);
+                return camera.getGamma();
+            } else if (flag == UVCCamera.PU_WB_TEMP) {
+                camera.setWhiteBlance(value);
+                return camera.getWhiteBlance();
+            } else if (flag == UVCCamera.PU_GAIN) {
+                camera.setGain(value);
+                return camera.getGain();
+            } else if (flag == UVCCamera.PU_POWER_LF) {
+                camera.setPowerlineFrequency(value);
+                return camera.getPowerlineFrequency();
             }
         }
         throw new IllegalStateException();
@@ -409,7 +480,73 @@ abstract class AbstractUVCCameraHandler extends Handler {
             } else if (flag == UVCCamera.PU_CONTRAST) {
                 camera.resetContrast();
                 return camera.getContrast();
+            } else if (flag == UVCCamera.PU_EXPOSURE) {
+                camera.resetExposure();
+                return camera.getExposure();
+            } else if (flag == UVCCamera.PU_EXPOSURE_REL) {
+                camera.resetExposureRel();
+                return camera.getExposureRel();
+            } else if (flag == UVCCamera.PU_EXPOSURE_PRIORITY) {
+                camera.resetExposurePriority();
+                return camera.getExposurePriority();
+            } else if (flag == UVCCamera.PU_HUE) {
+                camera.resetHue();
+                return camera.getHue();
+            } else if (flag == UVCCamera.PU_SATURATION) {
+                camera.resetSaturation();
+                return camera.getSaturation();
+            } else if (flag == UVCCamera.PU_SHARPNESS) {
+                camera.resetSharpness();
+                return camera.getSharpness();
+            } else if (flag == UVCCamera.PU_GAMMA) {
+                camera.resetGamma();
+                return camera.getGamma();
+            } else if (flag == UVCCamera.PU_WB_TEMP) {
+                camera.resetWhiteBlance();
+                return camera.getWhiteBlance();
+            } else if (flag == UVCCamera.PU_GAIN) {
+                camera.resetGain();
+                return camera.getGain();
+            } else if (flag == UVCCamera.PU_POWER_LF) {
+                camera.resetPowerlineFrequency();
+                return camera.getPowerlineFrequency();
             }
+        }
+        throw new IllegalStateException();
+    }
+
+    public int setExposureMode(final int mode) {
+        checkReleased();
+        final CameraThread thread = mWeakThread.get();
+        final UVCCamera camera = thread != null ? thread.mUVCCamera : null;
+        if (camera != null) {
+            boolean next = false;
+            switch (mode) {
+                case UVCCamera.CTRL_SCANNING:
+                case UVCCamera.CTRL_AE:
+                case UVCCamera.CTRL_AE_PRIORITY:
+                case UVCCamera.CTRL_AE_ABS:
+                case UVCCamera.CTRL_AR_REL:
+                    next = true;
+                    break;
+                default:
+                    break;
+            }
+
+            if (next) {
+                camera.setExposureMode(mode);
+                return camera.getExposureMode();
+            }
+        }
+        throw new IllegalStateException();
+    }
+
+    public int getExposureMode() {
+        checkReleased();
+        final CameraThread thread = mWeakThread.get();
+        final UVCCamera camera = thread != null ? thread.mUVCCamera : null;
+        if (camera != null) {
+            return camera.getExposureMode();
         }
         throw new IllegalStateException();
     }
@@ -429,6 +566,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 break;
             case MSG_PREVIEW_START:
                 thread.handleStartPreview(msg.obj);
+                break;
+            case MSG_PREVIEW_RESTART:
+                thread.handleRestartPreview();
                 break;
             case MSG_PREVIEW_STOP:
                 thread.handleStopPreview();
@@ -628,6 +768,21 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 mUVCCamera.setPreviewDisplay((Surface) surface);
             } else {
                 mUVCCamera.setPreviewTexture((SurfaceTexture) surface);
+            }
+            mUVCCamera.startPreview();
+            mUVCCamera.updateCameraParams();
+            synchronized (mSync) {
+                mIsPreviewing = true;
+            }
+            callOnStartPreview();
+        }
+
+        public void handleRestartPreview() {
+            if (DEBUG) {
+                Log.v(TAG_THREAD, "handleStartPreview:");
+            }
+            if ((mUVCCamera == null) || mIsPreviewing) {
+                return;
             }
             mUVCCamera.startPreview();
             mUVCCamera.updateCameraParams();
