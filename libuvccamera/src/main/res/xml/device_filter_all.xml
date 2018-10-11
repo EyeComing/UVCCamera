@@ -24,7 +24,6 @@
   -->
 
 <usb>
-	<!--小艾眼镜摄像头过滤器-->
-	<usb-device vendorId="3034" subclass="2" productId="22656" class="239"/>
-	<usb-device vendorId="0483" subclass="2" productId="5730" class="239"/>
+    <!-- all device of UVC -->
+    <usb-device class="239" subclass="2" />
 </usb>
