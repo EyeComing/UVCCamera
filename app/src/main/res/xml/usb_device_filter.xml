@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<usb>
+    <!--音频-->
+    <usb-device productId="450" vendorId="3468" subclass="0" class="0"/>
+    <!--usb camera-->
+    <usb-device productId="22656" vendorId="3034" subclass="2" class="239"/>
+    <!--STM32-->
+    <usb-device productId="22320" vendorId="1155" subclass="2" class="255"/>
+</usb>
