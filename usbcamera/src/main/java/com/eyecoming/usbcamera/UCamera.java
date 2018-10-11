@@ -9,12 +9,8 @@ import android.util.Log;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.DeviceFilter;
 import com.serenegiant.usb.USBMonitor;
-import com.serenegiant.usb.UVCCamera;
 
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * UCamera
@@ -24,13 +20,18 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class UCamera implements CameraDialog.CameraDialogParent {
+    private static final int DEVICE_CLASS = 239;
+    private static final int DEVICE_SUBCLASS = 2;
+    private static final int PRODUCT_ID = 22656;
+    private static final int VENDOR_ID = 3034;
+    private final static String TAG = "UCamera";
     private USBMonitor mUSBMonitor;
     private Context mContext;
     private OnCameraListener mListener;
     private boolean mAutoConnect;
     private USBMonitor.UsbControlBlock mControlBlock;
-    private final static String TAG = "UCamera";
     private boolean isAttached = false;
+    private boolean notConnect = false;
 
     /**
      * 初始化UCamera
@@ -41,6 +42,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     public UCamera(Context context, boolean autoConnect) {
         this.mContext = context;
         this.mAutoConnect = autoConnect;
+        this.notConnect = false;
         mUSBMonitor = new USBMonitor(context, mOnDeviceConnectListener);
     }
 
@@ -69,6 +71,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     public UCamera(Context context, boolean autoConnect, USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
         this.mContext = context;
         this.mAutoConnect = autoConnect;
+        this.notConnect = false;
         if (onDeviceConnectListener == null) {
             onDeviceConnectListener = mOnDeviceConnectListener;
         }
@@ -85,7 +88,34 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      */
     public UCamera(Context context, @NonNull USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
         this.mContext = context;
+        this.notConnect = false;
         mUSBMonitor = new USBMonitor(context, onDeviceConnectListener);
+    }
+
+    /**
+     * 初始化UCamera
+     * <br/>
+     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     *
+     * @param context        Context
+     * @param cameraListener OnCameraListener USBCamera回调
+     */
+    public UCamera(Context context, OnCameraListener cameraListener) {
+        this(context);
+        this.mListener = cameraListener;
+    }
+
+    /**
+     * 初始化UCamera
+     * <br/>
+     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     *
+     * @param context Context
+     */
+    public UCamera(Context context) {
+        this.mContext = context;
+        this.notConnect = true;
+        mUSBMonitor = new USBMonitor(context, mOnDeviceConnectListener);
     }
 
     /**
@@ -133,13 +163,19 @@ public class UCamera implements CameraDialog.CameraDialogParent {
             if (mListener != null) {
                 mListener.onAttach(device);
             }
-            if (!isAttached) {
-                isAttached = true;
-                if (!mAutoConnect) {
-                    //选择摄像头
-                    CameraDialog.showDialog((Activity) mContext);
-                } else {
-                    getFirstUsbCameraDevice();
+
+            if (isCameraDevice(device)) {
+                if (!isAttached) {
+                    isAttached = true;
+                    if (notConnect) {
+                        return;
+                    }
+                    if (!mAutoConnect) {
+                        //选择摄像头
+                        CameraDialog.showDialog((Activity) mContext);
+                    } else {
+                        getFirstUsbCameraDevice();
+                    }
                 }
             }
         }
@@ -179,6 +215,21 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         }
 
     };
+
+    /**
+     * 请求usb权限
+     *
+     * @param device USB Camera 对应的 UsbDevice
+     * @return 设备是否支持USB设备 true:支持 false:不支持
+     */
+    public boolean requestUsbCameraDevice(UsbDevice device) {
+        boolean result = mUSBMonitor.requestPermission(device);
+        if (result) {
+            // when failed. your device may not support USB.
+            Log.d(TAG, "your device may not support USB");
+        }
+        return !result;
+    }
 
     /**
      * 请求第一个可用USB摄像头
@@ -261,5 +312,28 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      */
     public USBMonitor.UsbControlBlock getControlBlock() {
         return mControlBlock;
+    }
+
+    /**
+     * 判断指定设备是否已经申请了权限
+     *
+     * @param device UsbDevice
+     * @return true:有权限 false:未申请权限
+     */
+    public boolean hasPermission(UsbDevice device) {
+        return mUSBMonitor.hasPermission(device);
+    }
+
+    /**
+     * @param device
+     * @return
+     */
+    public static boolean isCameraDevice(UsbDevice device) {
+        int deviceClass = device.getDeviceClass();
+        int deviceSubclass = device.getDeviceSubclass();
+        int productId = device.getProductId();
+        int vendorId = device.getVendorId();
+        return (PRODUCT_ID == productId && VENDOR_ID == vendorId && DEVICE_CLASS == deviceClass && deviceSubclass == DEVICE_SUBCLASS);
+//        return (DEVICE_CLASS == deviceClass && deviceSubclass == DEVICE_SUBCLASS);
     }
 }
