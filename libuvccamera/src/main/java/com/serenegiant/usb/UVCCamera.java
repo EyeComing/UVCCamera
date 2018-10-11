@@ -101,6 +101,9 @@ public class UVCCamera {
     public static final int PU_AVIDEO_STD = 0x80010000;    // D16: Analog Video Standard
     public static final int PU_AVIDEO_LOCK = 0x80020000;    // D17: Analog Video Lock Status
     public static final int PU_CONTRAST_AUTO = 0x80040000;    // D18: Contrast, Auto
+    public static final int PU_EXPOSURE = 0x80003001;    // D19: Exposure
+    public static final int PU_EXPOSURE_REL = 0x80003002;    // D19: Exposure
+    public static final int PU_EXPOSURE_PRIORITY = 0x80003003;    // D19: Exposure
 
     // uvc_status_class from libuvc.h
     public static final int STATUS_CLASS_CONTROL = 0x10;
@@ -894,6 +897,12 @@ public class UVCCamera {
         return nativeGetPowerlineFrequency(mNativePtr);
     }
 
+    public void resetPowerlineFrequency() {
+        if (mNativePtr != 0) {
+            nativeSetPowerlineFrequency(mNativePtr, mPowerlineFrequencyDef);
+        }
+    }
+
 //================================================================================
 
     /**
@@ -942,6 +951,127 @@ public class UVCCamera {
     }
 
     //================================================================================
+
+    public synchronized void setExposureMode(final int exposureMode) {
+        if (mNativePtr != 0) {
+            if (mExposureModeMin <= exposureMode && mExposureMax >= exposureMode) {
+                nativeSetExposureMode(mNativePtr, exposureMode);
+            }
+        }
+    }
+
+    public synchronized int getExposureMode() {
+        nativeUpdateExposureRelLimit(mNativePtr);
+        return nativeGetExposureMode(mNativePtr);
+    }
+
+    public synchronized void resetExposureMode() {
+        if (mNativePtr != 0) {
+            nativeSetExposureMode(mNativePtr, mExposureModeDef);
+        }
+    }
+
+    public synchronized int getExposureRel(int exposure_abs) {
+        int result = 0;
+        if (mNativePtr != 0) {
+            nativeUpdateExposureRelLimit(mNativePtr);
+            final float range = Math.abs(mExposureMax - mExposureMin);
+            if (range > 0) {
+                result = (int) ((exposure_abs - mExposureMin) * 100.f / range);
+            }
+        }
+        return result;
+    }
+
+    public synchronized int getExposureRel() {
+        int exposure_abs = nativeGetExposure(mNativePtr);
+        return getExposureRel(exposure_abs);
+    }
+
+    public synchronized void setExposureRel(final int exposure) {
+        if (mNativePtr != 0) {
+            final float range = Math.abs(mExposureMax - mExposureMin);
+            if (range > 0) {
+                int exposureVal = (int) (exposure / 100.f * range) + mExposureMin;
+                nativeSetExposureRel(mNativePtr, exposureVal);
+            }
+        }
+    }
+
+    public synchronized void resetExposureRel() {
+        if (mNativePtr != 0) {
+            nativeSetExposureRel(mNativePtr, mExposureDef);
+        }
+    }
+
+    public synchronized int getExposure(int exposure_abs) {
+        int result = 0;
+        if (mNativePtr != 0) {
+            nativeUpdateExposureLimit(mNativePtr);
+            final float range = Math.abs(mExposureMax - mExposureMin);
+            if (range > 0) {
+                result = (int) ((exposure_abs - mExposureMin) * 100.f / range);
+            }
+        }
+        return result;
+    }
+
+    public synchronized int getExposure() {
+        int exposure_abs = nativeGetExposure(mNativePtr);
+        return getExposure(exposure_abs);
+    }
+
+    public synchronized void setExposure(final int exposure) {
+        if (mNativePtr != 0) {
+            final float range = Math.abs(mExposureMax - mExposureMin);
+            if (range > 0) {
+                int exposureVal = (int) (exposure / 100.f * range) + mExposureMin;
+                nativeSetExposure(mNativePtr, exposureVal);
+            }
+        }
+    }
+
+    public synchronized void resetExposure() {
+        if (mNativePtr != 0) {
+            nativeSetExposure(mNativePtr, mExposureDef);
+        }
+    }
+
+    public synchronized int getExposurePriority(int exposure_abs) {
+        int result = 0;
+        if (mNativePtr != 0) {
+            nativeUpdateExposurePriorityLimit(mNativePtr);
+            final float range = Math.abs(mExposurePriorityMax - mExposurePriorityMin);
+            if (range > 0) {
+                result = (int) ((exposure_abs - mExposureMin) * 100.f / range);
+            }
+        }
+        return result;
+    }
+
+    public synchronized int getExposurePriority() {
+        int exposure_abs = nativeGetExposurePriority(mNativePtr);
+        return getExposurePriority(exposure_abs);
+    }
+
+    public synchronized void setExposurePriority(final int exposure) {
+        if (mNativePtr != 0) {
+            final float range = Math.abs(mExposurePriorityMax - mExposurePriorityMin);
+            if (range > 0) {
+                int exposureVal = (int) (exposure / 100.f * range) + mExposurePriorityMin;
+                nativeSetExposurePriority(mNativePtr, exposureVal);
+            }
+        }
+    }
+
+    public synchronized void resetExposurePriority() {
+        if (mNativePtr != 0) {
+            nativeSetExposurePriority(mNativePtr, mExposurePriorityDef);
+        }
+    }
+
+    //================================================================================
+
     public synchronized void updateCameraParams() {
         if (mNativePtr != 0) {
             if ((mControlSupports == 0) || (mProcSupports == 0)) {

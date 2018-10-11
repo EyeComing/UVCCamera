@@ -12,3 +12,7 @@ captures
 /*/src/test
 *.rar
 *.zip
+
+#过滤开发测试项目
+/agora
+/devtest
