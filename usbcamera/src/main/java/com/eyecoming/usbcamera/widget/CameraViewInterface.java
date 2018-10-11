@@ -63,6 +63,14 @@ public interface CameraViewInterface extends IAspectRatioView {
          * @param surface Surface
          */
         void onSurfaceDestroy(CameraViewInterface view, Surface surface);
+
+        /**
+         * Surface数据变化
+         *
+         * @param view    CameraViewInterface
+         * @param surface Surface
+         */
+        void onSurfaceUpdated(CameraViewInterface view, Surface surface);
     }
 
     /**

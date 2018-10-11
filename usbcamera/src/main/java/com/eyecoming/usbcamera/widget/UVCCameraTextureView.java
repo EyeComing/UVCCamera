@@ -158,6 +158,9 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
 
     @Override
     public void onSurfaceTextureUpdated(final SurfaceTexture surface) {
+        if (mCallback != null) {
+            mCallback.onSurfaceUpdated(this, getSurface());
+        }
         synchronized (mCaptureSync) {
             if (mReqesutCaptureStillImage) {
                 mReqesutCaptureStillImage = false;
