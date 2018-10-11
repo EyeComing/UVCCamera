@@ -1,73 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff000000"
-    tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame">
+    tools:context=".MainActivity">
 
-    <com.eyecoming.usbcamera.widget.UVCCameraTextureView
-        android:id="@+id/camera_view"
+    <Button
+        android:id="@+id/btn_camera"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintDimensionRatio="16:9"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="USB Camera 连接demo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btn_intent"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_audio"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="intent" />
-
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="与DeepVue SDK混合使用，声音demo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_camera" />
 </android.support.constraint.ConstraintLayout>
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:tools="http://schemas.android.com/tools"-->
-<!--android:id="@+id/RelativeLayout1"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--android:background="#ff000000"-->
-<!--tools:context=".MainActivity"-->
-<!--tools:ignore="MergeRootFrame">-->
-
-<!--<com.eyecoming.usbcamera.widget.UVCCameraTextureView-->
-    <!--android:id="@+id/camera_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_centerHorizontal="true" />-->
-
-<!--<Button-->
-    <!--android:id="@+id/btn_intent"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="intent" />-->
-
-<!--</RelativeLayout>-->
-<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:id="@+id/RelativeLayout1"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="#ff000000"-->
-    <!--tools:context=".MainActivity"-->
-    <!--tools:ignore="MergeRootFrame">-->
-
-    <!--<com.eyecoming.usbcamera.widget.UVCCameraTextureView-->
-        <!--android:id="@+id/camera_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="center" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/btn_intent"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="intent" />-->
-
-<!--</FrameLayout>-->

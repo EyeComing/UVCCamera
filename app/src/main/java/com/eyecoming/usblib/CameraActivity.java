@@ -10,10 +10,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 
-import com.eyecoming.sdk.USBManager;
-import com.eyecoming.sdk.bean.AudioEnableData;
-import com.eyecoming.sdk.bean.AudioVolumeData;
 import com.eyecoming.usbcamera.OnCameraListener;
 import com.eyecoming.usbcamera.UCamera;
 import com.eyecoming.usbcamera.impl.CameraCallback;
@@ -29,14 +27,18 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
- * AudioActivity
- * USB Camera和Audio一起使用demo
- * 需要使用DeepVue SDK
+ * Usb Camera SDK Demo
+ * 基本使用
+ * 每一帧图像的获取
+ * 分辨率获取
+ * 曝光模式设置及曝光值修改
  *
  * @author JesseHu
- * @date 2018/9/30
+ * @date 2018/7/19
+ * @update 2018/10/11
  */
-public class AudioActivity extends AppCompatActivity implements CameraDialog.CameraDialogParent {
+public final class CameraActivity extends AppCompatActivity implements CameraDialog.CameraDialogParent {
+
     private UCamera mUCamera;
     private static final int PREVIEW_WIDTH = 1280;
     private static final int PREVIEW_HEIGHT = 720;
@@ -53,25 +55,18 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
         initView();
 
         setupUVCCamera();
-
-        USBManager.init(this);
     }
 
     private void initView() {
-        setTitle("Audio Demo");
-        Button mIntentBtn = findViewById(R.id.btn_intent);
+        setTitle("Camera Demo");
         mUVCCameraView = findViewById(R.id.camera_view);
-        mIntentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCameraHandler.isPreviewing()) {
-                    mCameraHandler.stopPreview();
-                    return;
-                }
 
-                startPreview();
-            }
-        });
+        Button mIntentBtn = findViewById(R.id.btn_intent);
+        mIntentBtn.setOnClickListener(clickListener);
+
+        SeekBar exposureBar = findViewById(R.id.sb_exposure);
+        exposureBar.setProgress(100);
+        exposureBar.setOnSeekBarChangeListener(seekBarListener);
     }
 
     /**
@@ -83,19 +78,16 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
         // 预览尺寸需要Camera支持
         mCameraHandler = UVCCameraHandler.createHandler(this, mUVCCameraView, 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, 1);
         mCameraHandler.addCallback(mCameraCallback);
-        mUCamera = new UCamera(this, mCameraListener);
-        // 设置Frame的回调以及Frame的数据格式
-        mCameraHandler.setFrameCallback(mFrameCallback, UVCCamera.PIXEL_FORMAT_NV21);
+        mUCamera = new UCamera(this, true, mCameraListener);
     }
 
     private void startPreview() {
         SurfaceTexture st = mUVCCameraView.getSurfaceTexture();
         if (st != null) {
-            if (mCameraHandler.isPreviewing()) {
-                mCameraHandler.stopPreview();
-            }
             // 开启预览
             mCameraHandler.startPreview(new Surface(st));
+            // 设置Frame的回调以及Frame的数据格式
+            mCameraHandler.setFrameCallback(mFrameCallback, UVCCamera.PIXEL_FORMAT_NV21);
         }
     }
 
@@ -130,6 +122,41 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
 
     }
 
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (mCameraHandler.isPreviewing()) {
+                mCameraHandler.stopPreview();
+                return;
+            }
+            startPreview();
+        }
+    };
+
+    private SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (mCameraHandler != null) {
+                int oldExposure = mCameraHandler.getValue(UVCCamera.PU_EXPOSURE);
+                int newExposure = mCameraHandler.setValue(UVCCamera.PU_EXPOSURE, progress);
+                Log.d("exposure", "oldExposure: " + oldExposure + " newExposure: " + newExposure);
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
+
+    /**
+     * USB Camera 连接回调
+     */
     private OnCameraListener mCameraListener = new OnCameraListener() {
         @Override
         public void connected(UsbDevice usbDevice, USBMonitor.UsbControlBlock ctrlBlock) {
@@ -154,19 +181,7 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
 
         @Override
         public void onAttach(UsbDevice device) {
-            if (USBUtil.getDeviceType(device) == USBUtil.TYPE_DEVICE_AUDIO) {
-                mUCamera.getFirstUsbCameraDevice();
-            }
-            if (USBUtil.getDeviceType(device) == USBUtil.TYPE_DEVICE_AUDIO) {
-                USBManager usbManager = USBManager.getInstance();
-                AudioEnableData audioEnableData = new AudioEnableData();
-                audioEnableData.setEnable(true);
-                usbManager.sendInterruptData(audioEnableData);
 
-                AudioVolumeData audioVolumeData = new AudioVolumeData();
-                audioVolumeData.setVolume(7);
-                usbManager.sendInterruptData(audioVolumeData);
-            }
         }
 
         @Override
@@ -179,6 +194,7 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
                 if (mCameraHandler.isOpened()) {
                     mCameraHandler.close();
                 }
+                mCameraHandler = null;
             }
         }
     };
@@ -234,6 +250,13 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
             List<Size> supportedSizeList = uvcCamera.getSupportedSizeList();
 
             // 方式三 通过解析json(supportedSizeStr)数据获取
+
+
+            // 设置曝光模式
+            // 方式一
+            mCameraHandler.setExposureMode(UVCCamera.CTRL_SCANNING);
+            // 方式二
+//            uvcCamera.setExposureMode(UVCCamera.CTRL_SCANNING);
         }
 
         @Override
