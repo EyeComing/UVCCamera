@@ -154,7 +154,7 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
 
         @Override
         public void onAttach(UsbDevice device) {
-            if (USBUtil.getDeviceType(device) == USBUtil.TYPE_DEVICE_AUDIO) {
+            if (USBUtil.getDeviceType(device) == USBUtil.TYPE_DEVICE_CAMERA) {
                 mUCamera.getFirstUsbCameraDevice();
             }
             if (USBUtil.getDeviceType(device) == USBUtil.TYPE_DEVICE_AUDIO) {
