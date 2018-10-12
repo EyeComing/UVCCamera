@@ -137,6 +137,14 @@ public final class CameraActivity extends AppCompatActivity implements CameraDia
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (mCameraHandler != null) {
+                /*
+                UVCCamera.PU_EXPOSURE       曝光
+                UVCCamera.PU_BRIGHTNESS     亮度
+                UVCCamera.PU_CONTRAST       对比度
+                UVCCamera.PU_HUE            色调
+                UVCCamera.PU_SATURATION     饱和度
+                UVCCamera.PU_GAMMA          Gamma值
+                 */
                 int oldExposure = mCameraHandler.getValue(UVCCamera.PU_EXPOSURE);
                 int newExposure = mCameraHandler.setValue(UVCCamera.PU_EXPOSURE, progress);
                 Log.d("exposure", "oldExposure: " + oldExposure + " newExposure: " + newExposure);
