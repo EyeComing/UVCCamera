@@ -32,6 +32,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     private USBMonitor.UsbControlBlock mControlBlock;
     private boolean isAttached = false;
     private boolean notConnect = false;
+    private USBMonitor.UsbControlBlock lastCtrlBlock;
 
     /**
      * 初始化UCamera
@@ -184,9 +185,15 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
             Log.i(TAG, "USBMonitor connect");
 
-            mControlBlock = ctrlBlock;
-            if (mListener != null) {
-                mListener.connected(device, ctrlBlock);
+            if (isCameraDevice(device)) {
+                mControlBlock = ctrlBlock;
+                if (lastCtrlBlock != null && lastCtrlBlock.hashCode() == ctrlBlock.hashCode()) {
+                    return;
+                }
+                lastCtrlBlock = ctrlBlock;
+                if (mListener != null) {
+                    mListener.connected(device, ctrlBlock);
+                }
             }
         }
 
