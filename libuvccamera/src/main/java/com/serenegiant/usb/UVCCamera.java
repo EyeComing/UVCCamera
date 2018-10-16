@@ -48,7 +48,7 @@ public class UVCCamera {
     public static final int DEFAULT_PREVIEW_HEIGHT = 480;
     public static final int DEFAULT_PREVIEW_MODE = 0;
     public static final int DEFAULT_PREVIEW_MIN_FPS = 1;
-    public static final int DEFAULT_PREVIEW_MAX_FPS = 30;
+    public static final int DEFAULT_PREVIEW_MAX_FPS = 61;
     public static final float DEFAULT_BANDWIDTH = 1.0f;
 
     public static final int FRAME_FORMAT_YUYV = 0;
