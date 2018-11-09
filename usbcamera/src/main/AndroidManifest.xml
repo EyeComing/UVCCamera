@@ -25,12 +25,11 @@
     package="com.eyecoming.usbcamera">
 
     <application>
-        <service
-            android:name=".service.UVCService"
+        <service android:name="com.eyecoming.usbcamera.service.UVCService"
             android:process=":uvcservice">
             <intent-filter>
-                <action android:name=".service.IUVCService" />
-                <action android:name=".IUVCSlaveService" />
+                <action android:name="com.eyecoming.usbcamera.IUVCService" />
+                <action android:name="com.eyecoming.usbcamera.IUVCSlaveService" />
             </intent-filter>
         </service>
     </application>
