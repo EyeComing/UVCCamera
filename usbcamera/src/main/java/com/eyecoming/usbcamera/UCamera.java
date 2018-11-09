@@ -160,6 +160,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     public UCamera(Context context, int filterId) {
         this.mContext = context;
         this.notConnect = true;
+        this.mFilterId = filterId;
         mUSBMonitor = new USBMonitor(context, mOnDeviceConnectListener);
     }
 
