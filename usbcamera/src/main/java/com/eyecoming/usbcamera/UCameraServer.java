@@ -62,7 +62,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 注册USB监听器
+     * register usb monitor 注册USB监听器
      */
     public void monitorRegister() {
         if (mUSBMonitor != null) {
@@ -71,7 +71,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 注销USB监听器
+     * unregister usb monitor 注销USB监听器
      */
     public void monitorUnregister() {
         if (mUSBMonitor != null) {
@@ -80,7 +80,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 销毁USB监听器
+     * destroy usb monitor 销毁USB监听器
      */
     public void monitorDestory() {
         if (mUSBMonitor != null) {
@@ -90,19 +90,19 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 设置连接监听器
+     * set the connection listener for camera 设置连接监听器
      *
-     * @param cameraListener 连接监听
+     * @param cameraListener OnCameraListener 连接监听
      */
     public void setOnCameraListener(OnCameraListener cameraListener) {
         this.mCameraListener = cameraListener;
     }
 
     /**
-     * 设置预览尺寸
+     * set the size of preview 设置预览尺寸
      *
-     * @param width  预览宽度
-     * @param height 预览高度
+     * @param width  the width of preview 预览宽度
+     * @param height the height of preview 预览高度
      */
     public void setPreviewSize(int width, int height) {
         this.mPreviewWidth = width;
@@ -110,7 +110,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 设置预览显示
+     * set the surface for preview 设置预览显示
      *
      * @param mPreviewSurface Surface
      */
@@ -123,7 +123,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 设置副预览
+     * set the sub surface for preview 设置副预览
      *
      * @param mPreviewSurfaceSub Surface
      */
@@ -136,11 +136,11 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 设置预览
+     * set the surface for preview 设置预览
      *
      * @param mPreviewSurface Surface显示
-     * @param width           预览宽度
-     * @param height          预览高度
+     * @param width           the width of preview预览宽度
+     * @param height          the height of preview预览高度
      */
     public void setPreView(Surface mPreviewSurface, int width, int height) {
         this.mPreviewSurface = mPreviewSurface;
@@ -156,9 +156,9 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * 设置预览
      *
      * @param mPreviewSurface    Surface显示
-     * @param mPreviewSurfaceSub 副预览
-     * @param width              预览宽度
-     * @param height             预览高度
+     * @param mPreviewSurfaceSub sub surface副预览
+     * @param width              the width of preview预览宽度
+     * @param height             the height of preview预览高度
      */
     public void setPreView(Surface mPreviewSurface, Surface mPreviewSurfaceSub, int width, int height) {
         this.mPreviewSurface = mPreviewSurface;
@@ -176,7 +176,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 设置默认摄像头过滤器
+     * set the usb filter of sdk 设置默认摄像头过滤器
      */
     public void setDeviceFilter() {
         final List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, R.xml.device_filter);
@@ -184,9 +184,10 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 设置自定义摄像头过滤器
+     * set the custom usb filter 设置自定义摄像头过滤器
      *
-     * @param deviceFilterId 摄像头过滤文件ID(只限xml文件夹)
+     * @param deviceFilterId usb device filter id in XML folder
+     *                       <br/>摄像头过滤文件ID(只限xml文件夹)
      */
     public void setDeviceFilter(int deviceFilterId) {
         final List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, deviceFilterId);
@@ -194,7 +195,8 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 获取第一个摄像头设备
+     * request the first available usb camera
+     * <br/>获取第一个摄像头设备
      *
      * @return UsbDevice
      */
@@ -210,7 +212,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 开启摄像头
+     * open camera 开启摄像头
      */
     public void openCamera() {
         if (mCameraClient == null) {
@@ -223,7 +225,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 断开Camera连接
+     * disconnect camera 断开Camera连接
      */
     public void disconnect() {
         if (mCameraClient != null) {
@@ -233,7 +235,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 释放Camera
+     * release camera 释放Camera
      */
     public void release() {
         if (mCameraClient != null) {
@@ -244,7 +246,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 停止CameraServer
+     * stop camera server 停止CameraServer
      */
     public void stopServer() {
         if (mCameraClient != null) {
@@ -256,7 +258,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 添加预览Surface
+     * add surface to camera 添加预览Surface
      */
     public void addSurface() {
         if (mPreviewSurface != null) {
@@ -266,7 +268,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 添加预览Surface
+     * add sub surface to camera 添加预览Surface
      *
      * @param previewSurface Surface
      */
@@ -278,7 +280,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 移除预览Surface
+     * remove the preview surface 移除预览Surface
      */
     public void removeSurface() {
         if (mPreviewSurface != null) {
@@ -288,7 +290,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 移除副预览
+     * remove the sub preview surface 移除副预览
      */
     public void removeSurfaceSub() {
         if (mPreviewSurfaceSub != null) {
@@ -298,7 +300,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 移除指定预览Surface
+     * remove the surface which you want 移除指定预览Surface
      *
      * @param previewSurface Surface
      */
@@ -310,7 +312,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 开始录制
+     * start recording 开始录制
      */
     public void startRecording() {
         if (mCameraClient != null) {
@@ -319,7 +321,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 停止录制
+     * stop recording 停止录制
      */
     public void stopRecording() {
         if (mCameraClient != null && mCameraClient.isRecording()) {
@@ -328,9 +330,9 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 是否正在录制
+     * the camera is recording or not 是否正在录制
      *
-     * @return true:录制中 false:未录制或者已经停止录制
+     * @return true:recording录制中 false:not recording未录制或者已经停止录制
      */
     public boolean isRecoeding() {
         return mCameraClient.isRecording();
@@ -418,7 +420,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     };
 
     /**
-     * 获取UsbControlBlock
+     * get UsbControlBlock 获取UsbControlBlock
      *
      * @return UsbControlBlock
      */
@@ -427,10 +429,11 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
+     * check whether the usb device get the permission
      * 判断指定设备是否已经申请了权限
      *
      * @param device UsbDevice
-     * @return true:有权限 false:未申请权限
+     * @return true:get有权限 false:not get未申请权限
      */
     public boolean hasPermission(UsbDevice device) {
         return mUSBMonitor.hasPermission(device);
@@ -447,6 +450,11 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
 
     }
 
+    /**
+     * check camera opened 摄像头是否开启
+     *
+     * @return true/false
+     */
     public boolean isOpen() {
         return open;
     }
@@ -462,6 +470,12 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         surfaces.remove(surface);
     }
 
+    /**
+     * check the surface is added 判断当前surface是否被添加
+     *
+     * @param surface Surface
+     * @return true/false
+     */
     public boolean isSurfaceAdded(Surface surface) {
         return surfaces.contains(surface);
     }

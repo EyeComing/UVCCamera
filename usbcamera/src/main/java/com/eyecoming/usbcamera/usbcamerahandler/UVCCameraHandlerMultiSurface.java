@@ -42,8 +42,8 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
      *
      * @param parent     Activity
      * @param cameraView CameraViewInterface
-     * @param width      预览宽度
-     * @param height     预览高度
+     * @param width      the width of preview 预览宽度
+     * @param height     the height of preview 预览高度
      * @return UVCCameraHandlerMultiSurface
      */
     public static final UVCCameraHandlerMultiSurface createHandler(
@@ -58,9 +58,9 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
      *
      * @param parent          Activity
      * @param cameraView      CameraViewInterface
-     * @param width           预览宽度
-     * @param height          预览高度
-     * @param bandwidthFactor 带宽
+     * @param width           the width of preview 预览宽度
+     * @param height          the height of preview 预览高度
+     * @param bandwidthFactor bandwidth带宽
      * @return UVCCameraHandlerMultiSurface
      */
     public static final UVCCameraHandlerMultiSurface createHandler(
@@ -75,9 +75,9 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
      *
      * @param parent      Activity
      * @param cameraView  CameraViewInterface
-     * @param encoderType 编码类型0:MediaSurfaceEncoder, 1:MediaVideoEncoder, 2: MediaVideoBufferEncoder
-     * @param width       预览宽度
-     * @param height      预览高度
+     * @param encoderType encoder type编码类型 0:MediaSurfaceEncoder, 1:MediaVideoEncoder, 2: MediaVideoBufferEncoder
+     * @param width       the width of preview 预览宽度
+     * @param height      the height of preview 预览高度
      * @return UVCCameraHandlerMultiSurface
      */
     public static final UVCCameraHandlerMultiSurface createHandler(
@@ -92,10 +92,10 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
      *
      * @param parent      Activity
      * @param cameraView  CameraViewInterface
-     * @param encoderType 编码类型
-     * @param width       预览宽度
-     * @param height      预览高度
-     * @param format      编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
+     * @param encoderType encoder type 编码类型 0:MediaSurfaceEncoder, 1:MediaVideoEncoder, 2: MediaVideoBufferEncoder
+     * @param width       the width of preview 预览宽度
+     * @param height      the height of preview 预览高度
+     * @param format      frame format 编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
      * @return UVCCameraHandlerMultiSurface
      */
     public static final UVCCameraHandlerMultiSurface createHandler(
@@ -110,11 +110,11 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
      *
      * @param parent          Activity
      * @param cameraView      CameraViewInterface
-     * @param encoderType     0: use MediaSurfaceEncoder, 1: use MediaVideoEncoder, 2: use MediaVideoBufferEncoder
-     * @param width           预览宽度
-     * @param height          预览高度
-     * @param format          编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
-     * @param bandwidthFactor 带宽
+     * @param encoderType     encoder type 编码类型 0: use MediaSurfaceEncoder, 1: use MediaVideoEncoder, 2: use MediaVideoBufferEncoder
+     * @param width           the width of preview 预览宽度
+     * @param height          the height of preview 预览高度
+     * @param format          frame format 编码格式 UVCCamera.FRAME_FORMAT_YUYV(0) or UVCCamera.FRAME_FORMAT_MJPEG(1)
+     * @param bandwidthFactor bandwidth 带宽
      * @return UVCCameraHandlerMultiSurface
      */
     public static final UVCCameraHandlerMultiSurface createHandler(
@@ -151,7 +151,7 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
     }
 
     /**
-     * 开启预览
+     * start preview 开启预览
      */
     public synchronized void startPreview() {
         checkReleased();
@@ -163,11 +163,11 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
     }
 
     /**
-     * 添加预览Surface
+     * add the surface for preview 添加预览Surface
      *
-     * @param surfaceId    对应Surface的ID
-     * @param surface      预览Surface
-     * @param isRecordable 是否允许录制
+     * @param surfaceId    the surface id for surface of preview 对应Surface的ID
+     * @param surface      the surface for preview 预览Surface
+     * @param isRecordable recordable 是否允许录制
      */
     public synchronized void addSurface(final int surfaceId, final Surface surface, final boolean isRecordable) {
         checkReleased();
@@ -175,9 +175,9 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
     }
 
     /**
-     * 移除预览的Surface
+     * remove the surface of preview 移除预览的Surface
      *
-     * @param surfaceId 对应Surface的ID
+     * @param surfaceId the surface id for surface of preview 对应Surface的ID
      */
     public synchronized void removeSurface(final int surfaceId) {
         if (mRendererHolder != null) {
@@ -186,7 +186,7 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
     }
 
     /**
-     * 截图
+     * capture 截图
      */
     @Override
     public void captureStill() {
@@ -195,9 +195,9 @@ public class UVCCameraHandlerMultiSurface extends AbstractUVCCameraHandler {
     }
 
     /**
-     * 截图
+     * capture with path which you want to save截图
      *
-     * @param path 截图保存的路径
+     * @param path the save path of image 截图保存的路径
      */
     @Override
     public void captureStill(final String path) {

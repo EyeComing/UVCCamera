@@ -36,10 +36,13 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     private USBMonitor.UsbControlBlock lastCtrlBlock;
 
     /**
-     * 初始化UCamera
+     * initialization 初始化UCamera
      *
      * @param context     Context
-     * @param autoConnect 是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
+     * @param autoConnect Whether to connect the USB camera automatically
+     *                    <br/>是否自动连接USB相机
+     *                    <br/>true(will connect the first camera automatically)默认选择第一个进行连接
+     *                    <br/>false(will jump a dialog tu choose)弹窗选择camera进行连接
      */
     public UCamera(Context context, boolean autoConnect) {
         this.mContext = context;
@@ -49,10 +52,13 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
+     * initialization 初始化UCamera
      *
      * @param context        Context
-     * @param autoConnect    是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
+     * @param autoConnect    Whether to connect the USB camera automatically
+     *                       <br/>是否自动连接USB相机
+     *                       <br/>true(will connect the first camera automatically)默认选择第一个进行连接
+     *                       <br/>false(will jump a dialog tu choose)弹窗选择camera进行连接
      * @param cameraListener OnCameraListener USBCamera回调
      */
     public UCamera(Context context, boolean autoConnect, OnCameraListener cameraListener) {
@@ -61,10 +67,13 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
+     * initialization 初始化UCamera
      *
      * @param context        Context
-     * @param autoConnect    是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
+     * @param autoConnect    Whether to connect the USB camera automatically
+     *                       <br/>是否自动连接USB相机
+     *                       <br/>true(will connect the first camera automatically)默认选择第一个进行连接
+     *                       <br/>false(will jump a dialog tu choose)弹窗选择camera进行连接
      * @param filterId       usb device filter id
      * @param cameraListener OnCameraListener USBCamera回调
      */
@@ -75,14 +84,18 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
+     * initialization 初始化UCamera
      *
      * @param context                 Context
-     * @param autoConnect             是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
+     * @param autoConnect             Whether to connect the USB camera automatically
+     *                                <br/>是否自动连接USB相机
+     *                                <br/>true(will connect the first camera automatically)默认选择第一个进行连接
+     *                                <br/>false(will jump a dialog tu choose)弹窗选择camera进行连接
      * @param onDeviceConnectListener USBMonitor.OnDeviceConnectListener <br/>如果设置了监听,autoConnect不再起作用，所有操作将在OnDeviceConnectListener的回调中自行处理,
      *                                <br/>同时OnCameraListener也不再进行回调,即 {@link UCamera#setOnCameraListener(OnCameraListener)} 将无效
      *                                <br/> {@link UCamera#getControlBlock()} 将返回null
-     * @deprecated 使用 {@link UCamera#UCamera(Context, USBMonitor.OnDeviceConnectListener)} 替代
+     * @deprecated use {@link UCamera#UCamera(Context, USBMonitor.OnDeviceConnectListener)} to replace
+     * <br/>使用{@link UCamera#UCamera(Context, USBMonitor.OnDeviceConnectListener)} 替代
      */
     public UCamera(Context context, boolean autoConnect, USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
         this.mContext = context;
@@ -95,11 +108,13 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
+     * initialization 初始化UCamera
      *
      * @param context                 Context
      * @param onDeviceConnectListener USBMonitor.OnDeviceConnectListener
+     *                                <br/>if this listener is set, {@link UCamera#setOnCameraListener(OnCameraListener)} will not work
      *                                <br/>如果设置了该监听 {@link UCamera#setOnCameraListener(OnCameraListener)} 将无效
+     *                                <br/> and {@link UCamera#getControlBlock()} will return null
      *                                <br/> {@link UCamera#getControlBlock()} 将返回null
      */
     public UCamera(Context context, @NonNull USBMonitor.OnDeviceConnectListener onDeviceConnectListener) {
@@ -109,9 +124,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
-     * <br/>
-     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     * initialization 初始化UCamera
+     * <br/>will not connect USB Camera automatically(no selection dialog)
+     * <br/>不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
      *
      * @param context        Context
      * @param cameraListener OnCameraListener USBCamera回调
@@ -122,9 +137,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
-     * <br/>
-     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     * initialization 初始化UCamera
+     * <br/>will not connect USB Camera automatically(no selection dialog)
+     * <br/>不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
      *
      * @param context        Context
      * @param filterId       usb device filter id
@@ -137,9 +152,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
-     * <br/>
-     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     * initialization 初始化UCamera
+     * <br/>will not connect USB Camera automatically(no selection dialog)
+     * <br/>不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
      *
      * @param context Context
      */
@@ -150,9 +165,9 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 初始化UCamera
-     * <br/>
-     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     * initialization 初始化UCamera
+     * <br/>will not connect USB Camera automatically(no selection dialog)
+     * <br/>不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
      *
      * @param context  Context
      * @param filterId usb device filter id
@@ -165,16 +180,16 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 设置连接监听器
+     * set the connection listener for camera 设置连接监听器
      *
-     * @param cameraListener 连接监听
+     * @param cameraListener OnCameraListener连接监听
      */
     public void setOnCameraListener(OnCameraListener cameraListener) {
         this.mListener = cameraListener;
     }
 
     /**
-     * 注册USB监听器
+     * register usb monitor 注册USB监听器
      */
     public void monitorRegister() {
         if (mUSBMonitor != null) {
@@ -183,7 +198,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 注销USB监听器
+     * unregister usb monitor 注销USB监听器
      */
     public void monitorUnregister() {
         if (mUSBMonitor != null) {
@@ -192,7 +207,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 销毁USB监听器
+     * destroy usb monitor 销毁USB监听器
      */
     public void monitorDestory() {
         if (mUSBMonitor != null) {
@@ -273,10 +288,10 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     };
 
     /**
-     * 请求usb权限
+     * request the usb permissions 请求usb权限
      *
-     * @param device USB Camera 对应的 UsbDevice
-     * @return 设备是否支持USB设备 true:支持 false:不支持
+     * @param device USB camera device (USB Camera 对应的 UsbDevice)
+     * @return whether support usb device 设备是否支持USB设备 <br/> true:not support不支持 false:support支持
      */
     public boolean requestUsbCameraDevice(UsbDevice device) {
         boolean result = mUSBMonitor.requestPermission(device);
@@ -288,7 +303,8 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * 请求第一个可用USB摄像头
+     * request the first available usb camera
+     * <br/>请求第一个可用USB摄像头
      *
      * @return UsbDevice
      */
@@ -309,9 +325,11 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
+     * request the first available usb camera with usb device filter
      * 根据USB设备过滤文件请求第一个可用USB摄像头
      *
-     * @param deviceFilterId 摄像头过滤文件ID(只限xml文件夹)
+     * @param deviceFilterId usb device filter id in XML folder
+     *                       <br/>摄像头过滤文件ID(只限xml文件夹)
      * @return UsbDevice
      */
     public UsbDevice getFirstUsbCameraDevice(int deviceFilterId) {
@@ -331,6 +349,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
+     * get the device list of usb camera
      * 获取USB摄像头列表
      *
      * @return List&lt;UsbDevice&gt;USB摄像头列表
@@ -340,6 +359,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
+     * get the device list of usb camera with usb device filter
      * 根据USB设备过滤文件获取USB摄像头列表
      *
      * @param deviceFilterId 摄像头过滤文件ID(只限xml文件夹)
@@ -362,6 +382,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
+     * get UsbControlBlock
      * 获取UsbControlBlock
      *
      * @return UsbControlBlock
@@ -371,18 +392,22 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     }
 
     /**
+     * check whether the usb device get the permission
      * 判断指定设备是否已经申请了权限
      *
      * @param device UsbDevice
-     * @return true:有权限 false:未申请权限
+     * @return true:get 有权限 false:not get 未申请权限
      */
     public boolean hasPermission(UsbDevice device) {
         return mUSBMonitor.hasPermission(device);
     }
 
     /**
-     * @param device
-     * @return
+     * check whether the usb device is a camera
+     * 判断usb设备是否为摄像头
+     *
+     * @param device UsbDevice
+     * @return true/false
      */
     public static boolean isCameraDevice(UsbDevice device) {
         int deviceClass = device.getDeviceClass();

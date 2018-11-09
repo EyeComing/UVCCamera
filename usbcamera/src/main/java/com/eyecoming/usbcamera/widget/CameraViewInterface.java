@@ -39,7 +39,7 @@ import com.serenegiant.widget.IAspectRatioView;
 public interface CameraViewInterface extends IAspectRatioView {
     interface Callback {
         /**
-         * Surface创建完成
+         * Surface created. Surface创建完成
          *
          * @param view    CameraViewInterface
          * @param surface Surface
@@ -47,17 +47,17 @@ public interface CameraViewInterface extends IAspectRatioView {
         void onSurfaceCreated(CameraViewInterface view, Surface surface);
 
         /**
-         * Surface发生改变
+         * Surface changed. Surface发生改变
          *
          * @param view    CameraViewInterface
          * @param surface Surface
-         * @param width   宽度
-         * @param height  高度
+         * @param width   the width of surface 宽度
+         * @param height  the height of surface 高度
          */
         void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height);
 
         /**
-         * Surface销毁
+         * Surface destroy. Surface销毁
          *
          * @param view    CameraViewInterface
          * @param surface Surface
@@ -65,7 +65,7 @@ public interface CameraViewInterface extends IAspectRatioView {
         void onSurfaceDestroy(CameraViewInterface view, Surface surface);
 
         /**
-         * Surface数据变化
+         * the data updated of surface. Surface数据变化
          *
          * @param view    CameraViewInterface
          * @param surface Surface
@@ -74,52 +74,52 @@ public interface CameraViewInterface extends IAspectRatioView {
     }
 
     /**
-     * 暂停
+     * pause 暂停
      */
     void onPause();
 
     /**
-     * 继续
+     * resume 继续
      */
     void onResume();
 
     /**
-     * 设置Surface回调
+     * set the callback for surface 设置Surface回调
      *
      * @param callback CameraViewInterface.Callback
      */
     void setCallback(Callback callback);
 
     /**
-     * 获取SurfaceTexture
+     * get the SurfaceTexture 获取SurfaceTexture
      *
      * @return SurfaceTexture
      */
     SurfaceTexture getSurfaceTexture();
 
     /**
-     * 获取Surface
+     * get the surface 获取Surface
      *
      * @return Surface
      */
     Surface getSurface();
 
     /**
-     * 是否存在Surface
+     * check the surface is exist 是否存在Surface
      *
      * @return true:存在，false:不存在
      */
     boolean hasSurface();
 
     /**
-     * 设置视频编码器
+     * set the video encoder 设置视频编码器
      *
      * @param encoder IVideoEncoder编码器
      */
     void setVideoEncoder(final IVideoEncoder encoder);
 
     /**
-     * 获取静态图片
+     * capture 获取静态图片
      *
      * @return Bitmap
      */

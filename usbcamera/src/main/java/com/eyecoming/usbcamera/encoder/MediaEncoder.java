@@ -183,14 +183,14 @@ public abstract class MediaEncoder implements Runnable {
     }
 
 
-
     /**
      * prepareing method for each sub class
      * this method should be implemented in sub class, so set this as abstract method
      *
      * @throws IOException
      */
-    /*package*/ abstract void prepare() throws IOException;
+    /*package*/
+    abstract void prepare() throws IOException;
 
     /*package*/ void startRecording() {
         if (DEBUG) {
@@ -321,7 +321,7 @@ public abstract class MediaEncoder implements Runnable {
      * Method to set ByteBuffer to the MediaCodec encoder
      *
      * @param buffer             null means EOS
-     * @param presentationTimeUs
+     * @param presentationTimeUs pts
      */
     @SuppressWarnings("deprecation")
     protected void encode(final ByteBuffer buffer, final int length, final long presentationTimeUs) {

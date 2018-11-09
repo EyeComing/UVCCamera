@@ -233,36 +233,40 @@ public class UVCCameraTextureView extends AspectRatioTextureView implements Text
         mCallback = callback;
     }
 
+    /**
+     * reset fps 重置帧率
+     */
     public void resetFps() {
         mFpsCounter.reset();
     }
 
     /**
-     * 更新图像处理的帧率
+     * update fps 更新图像处理的帧率
      */
     public void updateFps() {
         mFpsCounter.update();
     }
 
     /**
-     * 获取当前图像处理帧率
+     * get current fps 获取当前图像处理帧率
      *
-     * @return 当前帧率
+     * @return current fps value 当前帧率
      */
     public float getFps() {
         return mFpsCounter.getFps();
     }
 
     /**
-     * 从开始获取总帧率
+     * get total fps 从开始获取总帧率
      *
-     * @return 总帧率
+     * @return total fps 总帧率
      */
     public float getTotalFps() {
         return mFpsCounter.getTotalFps();
     }
 
     /**
+     * render camera frames on this view on a private thread
      * 在一个私有线程上呈现此视图上的相机帧
      *
      * @author saki

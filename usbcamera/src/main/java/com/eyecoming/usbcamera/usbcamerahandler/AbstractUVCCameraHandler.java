@@ -100,9 +100,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 获取预览宽度
+     * get the width of preview 获取预览宽度
      *
-     * @return 预览宽度
+     * @return the width of preview预览宽度
      */
     public int getWidth() {
         final CameraThread thread = mWeakThread.get();
@@ -110,9 +110,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 获取预览高度
+     * get the height of preview 获取预览高度
      *
-     * @return 预览高度
+     * @return the height of preview预览高度
      */
     public int getHeight() {
         final CameraThread thread = mWeakThread.get();
@@ -120,9 +120,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 摄像头是否打开
+     * the camera is on or not 摄像头是否打开
      *
-     * @return true:打开，false:未打开
+     * @return true:on打开，false:off未打开
      */
     public boolean isOpened() {
         final CameraThread thread = mWeakThread.get();
@@ -130,9 +130,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 摄像头是否预览中
+     * the camera is previewing or not 摄像头是否预览中
      *
-     * @return true:开启预览，false:未开启预览
+     * @return true:previewing开启预览，false:not previewing未开启预览
      */
     public boolean isPreviewing() {
         final CameraThread thread = mWeakThread.get();
@@ -140,9 +140,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 摄像头是否录制中
+     * the camera is recording or not 摄像头是否录制中
      *
-     * @return true:录制中，false:未录制
+     * @return true:recording录制中，false:not recording未录制
      */
     public boolean isRecording() {
         final CameraThread thread = mWeakThread.get();
@@ -150,7 +150,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 判断是否为指定设备
+     * Determine whether the device is the current Camera device 判断设备是否为当前Camera设备
      *
      * @param device UsbDevice对应的设备
      * @return true/false
@@ -160,16 +160,29 @@ abstract class AbstractUVCCameraHandler extends Handler {
         return (thread != null) && thread.isEqual(device);
     }
 
+    /**
+     * whether the thread is camera thread
+     *
+     * @return true/false
+     */
     protected boolean isCameraThread() {
         final CameraThread thread = mWeakThread.get();
         return thread != null && (thread.getId() == Thread.currentThread().getId());
     }
 
+    /**
+     * whether the camera thread is released
+     *
+     * @return
+     */
     protected boolean isReleased() {
         final CameraThread thread = mWeakThread.get();
         return mReleased || (thread == null);
     }
 
+    /**
+     * check camera thread is released
+     */
     protected void checkReleased() {
         if (isReleased()) {
             throw new IllegalStateException("already released");
@@ -177,9 +190,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 开启指定摄像头
+     * turn on the camera through UsbControlBlock开启指定摄像头
      *
-     * @param ctrlBlock 指定摄像头Block
+     * @param ctrlBlock UsbControlBlock 指定摄像头Block
      */
     public void open(final USBMonitor.UsbControlBlock ctrlBlock) {
         checkReleased();
@@ -187,7 +200,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 关闭摄像头
+     * turn off the camera 关闭摄像头
      */
     public void close() {
         if (DEBUG) {
@@ -203,10 +216,10 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 跳转预览
+     * reset the size of preview(does not support now) 重置预览大小(暂不支持)
      *
-     * @param width  预览宽度
-     * @param height 预览宽度
+     * @param width  the new width of preview 预览宽度
+     * @param height the new height of preview 预览宽度
      */
     public void resize(final int width, final int height) {
         checkReleased();
@@ -214,10 +227,10 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 设置帧回调
+     * set the callback for each frame 设置帧回调
      *
-     * @param callback    回调
-     * @param pixelFormat 帧图像格式
+     * @param callback    IFrameCallback 回调
+     * @param pixelFormat pixel format 帧图像素格式
      */
     protected void setFrameCallback(IFrameCallback callback, int pixelFormat) {
         Message message = new Message();
@@ -228,9 +241,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 开始预览
+     * start preview开始预览
      *
-     * @param surface 预览
+     * @param surface preview surface 预览
      */
     protected void startPreview(final Object surface) {
         checkReleased();
@@ -241,7 +254,8 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 重新预览<br/>
+     * restart preview重新预览<br/>
+     * The premise is that the Camera object and the Surface object do not changed
      * 前提是Camera对象和Surface对象没有变动
      */
     public void restartPreview() {
@@ -250,7 +264,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 停止预览
+     * stop preview停止预览
      */
     public void stopPreview() {
         if (DEBUG) {
@@ -292,7 +306,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 开始录制
+     * start recording 开始录制
      */
     public void startRecording() {
         checkReleased();
@@ -300,9 +314,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 开始录制并保存到指定路径
+     * start recording and save the video file to the path which you want 开始录制并保存到指定路径
      *
-     * @param path 保存路径
+     * @param path the path which you want 保存路径
      */
     public void startRecording(String path) {
         checkReleased();
@@ -310,14 +324,14 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 停止录制
+     * stop recording 停止录制
      */
     public void stopRecording() {
         sendEmptyMessage(MSG_CAPTURE_STOP);
     }
 
     /**
-     * 释放摄像头
+     * release camera 释放摄像头
      */
     public void release() {
         mReleased = true;
@@ -326,9 +340,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 添加摄像头回调
+     * add the callback for camera 添加摄像头回调
      *
-     * @param callback 回调
+     * @param callback CameraCallback回调
      */
     public void addCallback(final CameraCallback callback) {
         checkReleased();
@@ -341,9 +355,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 移除摄像头回调
+     * remove the callback of camera移除摄像头回调
      *
-     * @param callback 回调
+     * @param callback CameraCallback 要移除的回调
      */
     public void removeCallback(final CameraCallback callback) {
         if (callback != null) {
@@ -359,9 +373,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 检测是否支持对应flag
+     * Detects whether the property is supported 检测是否支持对应属性
      *
-     * @param flag 对应flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
+     * @param flag 对应属性 UVCCamera.PU_BRIGHTNESS or UVCCamera.PU_CONTRAST
      * @return true/false
      */
     public boolean checkSupportFlag(final long flag) {
@@ -371,10 +385,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 获取对应flag的值
+     * get the value of property 获取对应属性的值
      *
-     * @param flag 对应flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
-     * @return 对应值
+     * @param flag property name对应属性 {UVCCamera.PU_BRIGHTNESS UVCCamera.PU_CONTRAST UVCCamera.PU_EXPOSURE
+     *             UVCCamera.PU_HUE UVCCamera.PU_SATURATION UVCCamera.PU_SHARPNESS
+     *             UVCCamera.PU_WB_TEMP UVCCamera.PU_GAIN UVCCamera.PU_POWER_LF}
+     * @return the value of property 对应值
      */
     public int getValue(final int flag) {
         checkReleased();
@@ -411,11 +427,13 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 设置指定flag的值
+     * set the value for property 设置指定属性的值
      *
-     * @param flag  指定flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
-     * @param value 指定值
-     * @return 设置后的值
+     * @param flag  property name 指定属性 {UVCCamera.PU_BRIGHTNESS UVCCamera.PU_CONTRAST UVCCamera.PU_EXPOSURE
+     *              UVCCamera.PU_HUE UVCCamera.PU_SATURATION UVCCamera.PU_SHARPNESS
+     *              UVCCamera.PU_WB_TEMP UVCCamera.PU_GAIN UVCCamera.PU_POWER_LF}
+     * @param value the value of property 指定值
+     * @return the value after set 设置后的值
      */
     public int setValue(final int flag, final int value) {
         checkReleased();
@@ -464,10 +482,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
     }
 
     /**
-     * 重置指定flag的值
+     * reset the value for property 重置指定属性的值
      *
-     * @param flag 指定flag UVCCamera.PU_BRIGHTNESS或者UVCCamera.PU_CONTRAST
-     * @return 重置后的值
+     * @param flag property name 指定属性 {UVCCamera.PU_BRIGHTNESS UVCCamera.PU_CONTRAST UVCCamera.PU_EXPOSURE
+     *             UVCCamera.PU_HUE UVCCamera.PU_SATURATION UVCCamera.PU_SHARPNESS
+     *             UVCCamera.PU_WB_TEMP UVCCamera.PU_GAIN UVCCamera.PU_POWER_LF}
+     * @return the value after reset 重置后的值
      */
     public int resetValue(final int flag) {
         checkReleased();

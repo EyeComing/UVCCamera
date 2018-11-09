@@ -12,27 +12,30 @@ import com.serenegiant.usb.UVCCamera;
 public interface OnCameraListener {
 
     /**
-     * USB相机连接成功
+     * USB camera connected USB相机连接成功
      *
      * @param device    UsbDevice
-     * @param ctrlBlock usb控制模块
+     * @param ctrlBlock UsbControlBlock
      */
     void connected(UsbDevice device, UsbControlBlock ctrlBlock);
 
     /**
-     * USB相机断开连接
+     * USB camera disconnected USB相机断开连接
+     *
+     * @param device    UsbDevice
+     * @param ctrlBlock UsbControlBlock
      */
     void disconnect(UsbDevice device, UsbControlBlock ctrlBlock);
 
     /**
-     * USB 设备连接
+     * USB device attach USB设备连接
      *
      * @param device UsbDevice
      */
     void onAttach(UsbDevice device);
 
     /**
-     * USB 设备断开连接
+     * USB device detach USB设备断开连接
      *
      * @param device UsbDevice
      */

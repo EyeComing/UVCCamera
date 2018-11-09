@@ -238,10 +238,17 @@ public class UVCCameraTextureView4Agora extends AspectRatioTextureView implement
         mCallback = callback;
     }
 
+    /**
+     * Set the frame image update listener 设置帧图像更新监听
+     * @param listener FrameUpdateListener
+     */
     public void setFrameUpdateListener(FrameUpdateListener listener) {
         frameUpdateListener = listener;
     }
 
+    /**
+     * reset fps 重置帧率
+     */
     public void resetFps() {
         mFpsCounter.reset();
     }
@@ -256,7 +263,7 @@ public class UVCCameraTextureView4Agora extends AspectRatioTextureView implement
     /**
      * get current fps 获取当前图像处理帧率
      *
-     * @return 当前帧率
+     * @return current fps value 当前帧率
      */
     public float getFps() {
         return mFpsCounter.getFps();

@@ -62,7 +62,7 @@ public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
         }
         mTrackIndex = -1;
         mMuxerStarted = mIsEOS = false;
-        // prepare MediaCodec for AAC encoding of audio data from inernal mic.
+        // prepare MediaCodec for AAC encoding of audio data from internal mic.
         final MediaCodecInfo audioCodecInfo = selectAudioCodec(MIME_TYPE);
         if (audioCodecInfo == null) {
             Log.e(TAG, "Unable to find an appropriate codec for " + MIME_TYPE);
@@ -77,8 +77,6 @@ public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
         audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-//		audioFormat.setLong(MediaFormat.KEY_MAX_INPUT_SIZE, inputFile.length());
-//      audioFormat.setLong(MediaFormat.KEY_DURATION, (long)durationInMs );
         if (DEBUG) {
             Log.i(TAG, "format: " + audioFormat);
         }
@@ -126,7 +124,8 @@ public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
     private class AudioThread extends Thread {
         @Override
         public void run() {
-            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO); // THREAD_PRIORITY_URGENT_AUDIO
+            // THREAD_PRIORITY_URGENT_AUDIO
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
             int cnt = 0;
             final int min_buffer_size = AudioRecord.getMinBufferSize(
                     SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
@@ -219,7 +218,7 @@ public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
     /**
      * select the first codec that match a specific MIME type
      *
-     * @param mimeType
+     * @param mimeType MIME type
      * @return MediaCodecInfo
      */
     private static final MediaCodecInfo selectAudioCodec(final String mimeType) {
@@ -233,7 +232,8 @@ public class MediaAudioEncoder extends MediaEncoder implements IAudioEncoder {
         LOOP:
         for (int i = 0; i < numCodecs; i++) {
             final MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
-            if (!codecInfo.isEncoder()) {    // skipp decoder
+            // skipp decoder
+            if (!codecInfo.isEncoder()) {
                 continue;
             }
             final String[] types = codecInfo.getSupportedTypes();

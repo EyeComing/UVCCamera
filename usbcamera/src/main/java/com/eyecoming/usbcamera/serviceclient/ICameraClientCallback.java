@@ -24,6 +24,6 @@
 package com.eyecoming.usbcamera.serviceclient;
 
 public interface ICameraClientCallback {
-	public void onConnect();
-	public void onDisconnect();
+	void onConnect();
+	void onDisconnect();
 }
