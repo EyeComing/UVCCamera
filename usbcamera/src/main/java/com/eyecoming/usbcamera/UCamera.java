@@ -25,6 +25,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
     private static final int PRODUCT_ID = 22656;
     private static final int VENDOR_ID = 3034;
     private final static String TAG = "UCamera";
+    private int mFilterId = -1;
     private USBMonitor mUSBMonitor;
     private Context mContext;
     private OnCameraListener mListener;
@@ -56,6 +57,20 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      */
     public UCamera(Context context, boolean autoConnect, OnCameraListener cameraListener) {
         this(context, autoConnect);
+        this.mListener = cameraListener;
+    }
+
+    /**
+     * 初始化UCamera
+     *
+     * @param context        Context
+     * @param autoConnect    是否自动连接USB相机,true默认选择第一个进行连接，false弹窗选择camera进行连接
+     * @param filterId       usb device filter id
+     * @param cameraListener OnCameraListener USBCamera回调
+     */
+    public UCamera(Context context, boolean autoConnect, int filterId, OnCameraListener cameraListener) {
+        this(context, autoConnect);
+        this.mFilterId = filterId;
         this.mListener = cameraListener;
     }
 
@@ -111,9 +126,38 @@ public class UCamera implements CameraDialog.CameraDialogParent {
      * <br/>
      * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
      *
+     * @param context        Context
+     * @param filterId       usb device filter id
+     * @param cameraListener OnCameraListener USBCamera回调
+     */
+    public UCamera(Context context, int filterId, OnCameraListener cameraListener) {
+        this(context);
+        this.mListener = cameraListener;
+        this.mFilterId = filterId;
+    }
+
+    /**
+     * 初始化UCamera
+     * <br/>
+     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     *
      * @param context Context
      */
     public UCamera(Context context) {
+        this.mContext = context;
+        this.notConnect = true;
+        mUSBMonitor = new USBMonitor(context, mOnDeviceConnectListener);
+    }
+
+    /**
+     * 初始化UCamera
+     * <br/>
+     * 不会主动连接USB Camera(不会自动连接，也不会有设备选择弹窗)
+     *
+     * @param context  Context
+     * @param filterId usb device filter id
+     */
+    public UCamera(Context context, int filterId) {
         this.mContext = context;
         this.notConnect = true;
         mUSBMonitor = new USBMonitor(context, mOnDeviceConnectListener);
@@ -175,7 +219,11 @@ public class UCamera implements CameraDialog.CameraDialogParent {
                         //选择摄像头
                         CameraDialog.showDialog((Activity) mContext);
                     } else {
-                        getFirstUsbCameraDevice();
+                        if (mFilterId != -1) {
+                            getFirstUsbCameraDevice(mFilterId);
+                        } else {
+                            getFirstUsbCameraDevice();
+                        }
                     }
                 }
             }
@@ -340,7 +388,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         int deviceSubclass = device.getDeviceSubclass();
         int productId = device.getProductId();
         int vendorId = device.getVendorId();
-        return (PRODUCT_ID == productId && VENDOR_ID == vendorId && DEVICE_CLASS == deviceClass && deviceSubclass == DEVICE_SUBCLASS);
-//        return (DEVICE_CLASS == deviceClass && deviceSubclass == DEVICE_SUBCLASS);
+//        return (PRODUCT_ID == productId && VENDOR_ID == vendorId && DEVICE_CLASS == deviceClass && deviceSubclass == DEVICE_SUBCLASS);
+        return (DEVICE_CLASS == deviceClass && deviceSubclass == DEVICE_SUBCLASS);
     }
 }
