@@ -110,7 +110,8 @@ public class CameraClient implements ICameraClient {
         if (DEBUG) {
             Log.v(TAG, "connect:");
         }
-        mWeakHandler.get().sendEmptyMessage(MSG_CONNECT);
+        CameraHandler cameraHandler = mWeakHandler.get();
+        cameraHandler.sendEmptyMessage(MSG_CONNECT);
     }
 
     @Override
@@ -177,10 +178,11 @@ public class CameraClient implements ICameraClient {
             if (mService == null) {
                 final Context context = mWeakContext.get();
                 if (context != null) {
-                    final Intent intent = new Intent(IUVCService.class.getName());
-                    intent.setPackage("com.serenegiant.usbcameratest4");
-                    context.bindService(intent,
-                            mServiceConnection, Context.BIND_AUTO_CREATE);
+                    final Intent intent = new Intent();
+                    intent.setAction(IUVCService.class.getName());
+//                    intent.setPackage(IUVCService.class.getPackage().getName());
+                    intent.setPackage(context.getPackageName());
+                    context.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
                 } else {
                     return true;
                 }
@@ -407,6 +409,7 @@ public class CameraClient implements ICameraClient {
             }
 
             //================================================================================
+
             public void handleSelect(final UsbDevice device) {
                 if (DEBUG) {
                     Log.v(TAG_CAMERA, "handleSelect:");
