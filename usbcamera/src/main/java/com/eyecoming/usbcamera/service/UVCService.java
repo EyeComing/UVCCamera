@@ -84,7 +84,7 @@ public class UVCService extends BaseService {
             mUSBMonitor.register();
         }
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        showNotification(smallIconResId, text, activity);
+//        showNotification(smallIconResId, text, activity);
     }
 
     @Override
