@@ -239,7 +239,7 @@ public class UVCCameraTextureView4Agora extends AspectRatioTextureView implement
     }
 
     public void setFrameUpdateListener(FrameUpdateListener listener) {
-        this.frameUpdateListener = listener;
+        frameUpdateListener = listener;
     }
 
     public void resetFps() {
@@ -247,14 +247,14 @@ public class UVCCameraTextureView4Agora extends AspectRatioTextureView implement
     }
 
     /**
-     * 更新图像处理的帧率
+     * update fps 更新图像处理的帧率
      */
     public void updateFps() {
         mFpsCounter.update();
     }
 
     /**
-     * 获取当前图像处理帧率
+     * get current fps 获取当前图像处理帧率
      *
      * @return 当前帧率
      */
@@ -263,15 +263,16 @@ public class UVCCameraTextureView4Agora extends AspectRatioTextureView implement
     }
 
     /**
-     * 从开始获取总帧率
+     * get total fps 从开始获取总帧率
      *
-     * @return 总帧率
+     * @return total fps 总帧率
      */
     public float getTotalFps() {
         return mFpsCounter.getTotalFps();
     }
 
     /**
+     * render camera frames on this view on a private thread
      * 在一个私有线程上呈现此视图上的相机帧
      *
      * @author saki
