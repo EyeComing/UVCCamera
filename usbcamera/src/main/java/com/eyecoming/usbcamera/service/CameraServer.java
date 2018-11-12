@@ -37,8 +37,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
 
-import com.eyecoming.usbcamera.IUVCServiceCallback;
-import com.eyecoming.usbcamera.IUVCServiceOnFrameAvailable;
+import com.eyecoming.usbcamera.service.IUVCServiceCallback;
+import com.eyecoming.usbcamera.service.IUVCServiceOnFrameAvailable;
 import com.eyecoming.usbcamera.R;
 import com.eyecoming.usbcamera.encoder.MediaAudioEncoder;
 import com.eyecoming.usbcamera.encoder.MediaEncoder;

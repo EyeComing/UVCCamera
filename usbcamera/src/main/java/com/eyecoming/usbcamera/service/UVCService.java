@@ -34,10 +34,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
 
-import com.eyecoming.usbcamera.IUVCService;
-import com.eyecoming.usbcamera.IUVCServiceCallback;
-import com.eyecoming.usbcamera.IUVCServiceOnFrameAvailable;
-import com.eyecoming.usbcamera.IUVCSlaveService;
+import com.eyecoming.usbcamera.service.IUVCService;
+import com.eyecoming.usbcamera.service.IUVCServiceCallback;
+import com.eyecoming.usbcamera.service.IUVCServiceOnFrameAvailable;
+import com.eyecoming.usbcamera.service.IUVCSlaveService;
 import com.eyecoming.usbcamera.R;
 import com.serenegiant.common.BaseService;
 import com.serenegiant.usb.USBMonitor;

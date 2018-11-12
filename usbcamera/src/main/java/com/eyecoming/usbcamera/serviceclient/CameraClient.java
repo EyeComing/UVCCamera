@@ -36,8 +36,8 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.Surface;
 
-import com.eyecoming.usbcamera.IUVCService;
-import com.eyecoming.usbcamera.IUVCServiceCallback;
+import com.eyecoming.usbcamera.service.IUVCService;
+import com.eyecoming.usbcamera.service.IUVCServiceCallback;
 
 import java.lang.ref.WeakReference;
 
