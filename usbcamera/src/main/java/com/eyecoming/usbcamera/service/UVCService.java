@@ -23,9 +23,7 @@
 
 package com.eyecoming.usbcamera.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.os.IBinder;
@@ -34,10 +32,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Surface;
 
-import com.eyecoming.usbcamera.service.IUVCService;
-import com.eyecoming.usbcamera.service.IUVCServiceCallback;
-import com.eyecoming.usbcamera.service.IUVCServiceOnFrameAvailable;
-import com.eyecoming.usbcamera.service.IUVCSlaveService;
 import com.eyecoming.usbcamera.R;
 import com.serenegiant.common.BaseService;
 import com.serenegiant.usb.USBMonitor;
@@ -53,21 +47,7 @@ public class UVCService extends BaseService {
     private USBMonitor mUSBMonitor;
     private NotificationManager mNotificationManager;
 
-    private int smallIconResId;
-    private String text;
-    private Class activity;
-
     public UVCService() {
-        if (DEBUG) {
-            Log.d(TAG, "Constructor:");
-        }
-    }
-
-    public UVCService(int smallIconResId, String text, Class activity) {
-        this.smallIconResId = smallIconResId;
-        this.text = text;
-        this.activity = activity;
-
         if (DEBUG) {
             Log.d(TAG, "Constructor:");
         }
@@ -83,8 +63,6 @@ public class UVCService extends BaseService {
             mUSBMonitor = new USBMonitor(getApplicationContext(), mOnDeviceConnectListener);
             mUSBMonitor.register();
         }
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        showNotification(smallIconResId, text, activity);
     }
 
     @Override
@@ -143,32 +121,6 @@ public class UVCService extends BaseService {
     }
 
 //********************************************************************************
-
-    /**
-     * helper method to show/change message on notification area
-     * and set this service as foreground service to keep alive as possible as this can.
-     *
-     * @param text
-     */
-    private void showNotification(int smallIconResId, final CharSequence text, Class activity) {
-        if (DEBUG) {
-            Log.v(TAG, "showNotification:" + text);
-        }
-        // Set the info for the views that show in the notification panel.
-        Notification.Builder builder = new Notification.Builder(this);
-        Notification notification = builder
-                .setSmallIcon(smallIconResId)
-                .setTicker(text)
-                .setWhen(System.currentTimeMillis())
-                .setContentTitle(getText(R.string.app_name))
-                .setContentText(text)
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, activity), 0))
-                .build();
-
-        startForeground(NOTIFICATION, notification);
-        // Send the notification.
-        mNotificationManager.notify(NOTIFICATION, notification);
-    }
 
     private final OnDeviceConnectListener mOnDeviceConnectListener = new OnDeviceConnectListener() {
         @Override

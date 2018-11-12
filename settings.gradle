@@ -1,4 +1,4 @@
-include ':app', ':agora'
+include ':app', ':agora', ':usbCameraTest4'
 include ':common'
 include ':libuvccamera'
 include ':usbcamera'

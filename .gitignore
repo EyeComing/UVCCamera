@@ -16,3 +16,4 @@ captures
 #过滤开发测试项目
 /agora
 /devtest
+/usbCameraTest4
