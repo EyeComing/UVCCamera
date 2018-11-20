@@ -136,6 +136,7 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
             if (mCameraHandler != null) {
                 // UVCCameraHandler.open()为异步
                 mCameraHandler.open(ctrlBlock);
+                Log.i("usb camera", "connected: " + ctrlBlock.hashCode());
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -148,7 +149,7 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
         }
 
         @Override
-        public void disconnect(UsbDevice usbDevice, USBMonitor.UsbControlBlock usbControlBlock) {
+        public void disconnect(UsbDevice usbDevice, USBMonitor.UsbControlBlock ctrlBlock) {
 
         }
 
@@ -171,13 +172,15 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
 
         @Override
         public void onDettach(UsbDevice device) {
-            // 在USB设备断开的时候close UVCCameraHandler防止再次连接的时候打开Camera失败
-            if (mCameraHandler != null) {
-                if (mCameraHandler.isPreviewing()) {
-                    mCameraHandler.stopPreview();
-                }
-                if (mCameraHandler.isOpened()) {
-                    mCameraHandler.close();
+            if (USBUtil.getDeviceType(device) == USBUtil.TYPE_DEVICE_CAMERA) {
+                // 在USB设备断开的时候close UVCCameraHandler防止再次连接的时候打开Camera失败
+                if (mCameraHandler != null) {
+                    if (mCameraHandler.isPreviewing()) {
+                        mCameraHandler.stopPreview();
+                    }
+                    if (mCameraHandler.isOpened()) {
+                        mCameraHandler.close();
+                    }
                 }
             }
         }
@@ -243,12 +246,12 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
 
         @Override
         public void onStartPreview() {
-
+            Log.i("CameraHandler", "onStartPreview: ");
         }
 
         @Override
         public void onStopPreview() {
-
+            Log.i("CameraHandler", "onStartPreview: ");
         }
 
         @Override

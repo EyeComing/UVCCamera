@@ -19,10 +19,12 @@
         <activity
             android:name=".CameraActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".AudioActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
