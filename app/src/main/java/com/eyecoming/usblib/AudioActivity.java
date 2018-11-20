@@ -133,6 +133,10 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
     private OnCameraListener mCameraListener = new OnCameraListener() {
         @Override
         public void connected(UsbDevice usbDevice, USBMonitor.UsbControlBlock ctrlBlock) {
+            if (mCameraHandler == null) {
+                mCameraHandler = UVCCameraHandler.createHandler(AudioActivity.this, mUVCCameraView, 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, 1);
+                mCameraHandler.addCallback(mCameraCallback);
+            }
             if (mCameraHandler != null) {
                 // UVCCameraHandler.open()为异步
                 mCameraHandler.open(ctrlBlock);
