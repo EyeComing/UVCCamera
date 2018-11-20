@@ -44,6 +44,7 @@ import com.eyecoming.usbcamera.encoder.MediaMuxerWrapper;
 import com.eyecoming.usbcamera.encoder.MediaSurfaceEncoder;
 import com.serenegiant.glutils.RenderHolderCallback;
 import com.serenegiant.glutils.RendererHolder;
+import com.serenegiant.usb.IFrameCallback;
 import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor.UsbControlBlock;
 import com.serenegiant.usb.UVCCamera;
@@ -241,6 +242,14 @@ public final class CameraServer extends Handler {
         }
     }
 
+    public void setFrameCallback(IFrameCallback callback, int pixelFormat) {
+        Message message = new Message();
+        message.what = MSG_FRAME_CALLBACK;
+        message.obj = callback;
+        message.arg1 = pixelFormat;
+        sendMessage(message);
+    }
+
     //********************************************************************************
     private void processOnCameraStart() {
         if (DEBUG) {
@@ -292,6 +301,7 @@ public final class CameraServer extends Handler {
     private static final int MSG_CAPTURE_STOP = 6;
     private static final int MSG_MEDIA_UPDATE = 7;
     private static final int MSG_RELEASE = 9;
+    private static final int MSG_FRAME_CALLBACK = 10;
 
     @Override
     public void handleMessage(final Message msg) {
@@ -326,6 +336,9 @@ public final class CameraServer extends Handler {
                 break;
             case MSG_RELEASE:
                 thread.handleRelease();
+                break;
+            case MSG_FRAME_CALLBACK:
+                thread.handleFrameCallback((IFrameCallback) msg.obj, msg.arg1);
                 break;
             default:
                 throw new RuntimeException("unsupported message:what=" + msg.what);
@@ -569,6 +582,12 @@ public final class CameraServer extends Handler {
                 mMuxer.stopRecording();
                 mMuxer = null;
                 // you should not wait here
+            }
+        }
+
+        public void handleFrameCallback(IFrameCallback callback, int pixelFormat) {
+            if (mUVCCamera != null) {
+                mUVCCamera.setFrameCallback(callback, pixelFormat);
             }
         }
 

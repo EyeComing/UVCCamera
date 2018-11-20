@@ -11,6 +11,7 @@ import com.eyecoming.usbcamera.serviceclient.CameraClient;
 import com.eyecoming.usbcamera.serviceclient.ICameraClientCallback;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.DeviceFilter;
+import com.serenegiant.usb.IFrameCallback;
 import com.serenegiant.usb.USBMonitor;
 
 import java.util.ArrayList;
@@ -42,23 +43,75 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     private boolean open = false;
     private List<Surface> surfaces;
 
+    /**
+     * init 初始化
+     *
+     * @param mContext Context
+     */
     public UCameraServer(Context mContext) {
+        this(mContext, R.xml.device_filter);
+    }
+
+    /**
+     * init(with a custom filter for usb) 初始化,可自定义usb过滤
+     *
+     * @param mContext Context
+     * @param filterId usb device filter id
+     */
+    public UCameraServer(Context mContext, int filterId) {
         this.mContext = mContext;
         surfaces = new ArrayList<>();
         mUSBMonitor = new USBMonitor(mContext, mOnDeviceConnectListener);
-        mCameraClient = new CameraClient(mContext, mCameraCallBack);
+        List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, filterId);
+        mUSBMonitor.setDeviceFilter(filters);
     }
 
+    /**
+     * init 初始化
+     *
+     * @param mContext        Context
+     * @param mCameraListener OnCameraListener
+     */
     public UCameraServer(Context mContext, OnCameraListener mCameraListener) {
         this(mContext);
         this.mCameraListener = mCameraListener;
     }
 
+    /**
+     * init(with a custom filter for usb) 初始化,可自定义usb过滤
+     *
+     * @param mContext        Context
+     * @param filterID        usb device filter id
+     * @param mCameraListener OnCameraListener
+     */
+    public UCameraServer(Context mContext, int filterID, OnCameraListener mCameraListener) {
+        this(mContext, filterID);
+        this.mCameraListener = mCameraListener;
+    }
+
+    /**
+     * init 初始化
+     *
+     * @param mContext              Context
+     * @param deviceConnectListener OnDeviceConnectListener
+     */
     public UCameraServer(Context mContext, USBMonitor.OnDeviceConnectListener deviceConnectListener) {
+        this(mContext, R.xml.device_filter, deviceConnectListener);
+    }
+
+    /**
+     * init(with a custom filter for usb) 初始化,可自定义usb过滤
+     *
+     * @param mContext              Context
+     * @param filterId              usb device filter id
+     * @param deviceConnectListener OnDeviceConnectListener
+     */
+    public UCameraServer(Context mContext, int filterId, USBMonitor.OnDeviceConnectListener deviceConnectListener) {
         this.mContext = mContext;
         surfaces = new ArrayList<>();
         mUSBMonitor = new USBMonitor(mContext, deviceConnectListener);
-        mCameraClient = new CameraClient(mContext, mCameraCallBack);
+        List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, filterId);
+        mUSBMonitor.setDeviceFilter(filters);
     }
 
     /**
@@ -165,14 +218,6 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         this.mPreviewSurfaceSub = mPreviewSurfaceSub;
         this.mPreviewWidth = width;
         this.mPreviewHeight = height;
-        if (mPreviewSurface != null) {
-            mCameraClient.addSurface(mPreviewSurface, false);
-            addSurfaceToList(mPreviewSurface);
-        }
-        if (mPreviewSurfaceSub != null) {
-            mCameraClient.addSurface(mPreviewSurfaceSub, false);
-            addSurfaceToList(mPreviewSurfaceSub);
-        }
     }
 
     /**
@@ -219,7 +264,12 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
             mCameraClient = new CameraClient(mContext, mCameraCallBack);
         }
         mCameraClient.select(getFirstUsbCameraDevice());
-        mCameraClient.resize(mPreviewWidth == 0 ? DEFAULT_WIDTH : mPreviewWidth, mPreviewHeight == 0 ? DEFAULT_HEIGHT : mPreviewHeight);
+
+        if (mPreviewWidth == 0 || mPreviewHeight == 0) {
+            mPreviewWidth = DEFAULT_WIDTH;
+            mPreviewHeight = DEFAULT_HEIGHT;
+        }
+        mCameraClient.resize(mPreviewWidth, mPreviewHeight);
         mCameraClient.connect();
         open = true;
     }
@@ -261,19 +311,29 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * add surface to camera 添加预览Surface
      */
     public void addSurface() {
-        if (mPreviewSurface != null) {
+        if (mCameraClient != null && mPreviewSurface != null) {
             mCameraClient.addSurface(mPreviewSurface, false);
             addSurfaceToList(mPreviewSurface);
         }
     }
 
     /**
-     * add sub surface to camera 添加预览Surface
+     * add sub surface to camera 添加副预览Surface
+     */
+    public void addSurfaceSub() {
+        if (mCameraClient != null && mPreviewSurfaceSub != null) {
+            mCameraClient.addSurface(mPreviewSurfaceSub, false);
+            addSurfaceToList(mPreviewSurfaceSub);
+        }
+    }
+
+    /**
+     * add surface to camera 添加预览Surface
      *
      * @param previewSurface Surface
      */
     public void addSurface(Surface previewSurface) {
-        if (previewSurface != null) {
+        if (mCameraClient != null && previewSurface != null) {
             mCameraClient.addSurface(previewSurface, false);
             addSurfaceToList(previewSurface);
         }
@@ -283,7 +343,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * remove the preview surface 移除预览Surface
      */
     public void removeSurface() {
-        if (mPreviewSurface != null) {
+        if (mCameraClient != null && mPreviewSurface != null) {
             mCameraClient.removeSurface(mPreviewSurface);
             removeSurfaceFromeList(mPreviewSurface);
         }
@@ -293,7 +353,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * remove the sub preview surface 移除副预览
      */
     public void removeSurfaceSub() {
-        if (mPreviewSurfaceSub != null) {
+        if (mCameraClient != null && mPreviewSurfaceSub != null) {
             mCameraClient.removeSurface(mPreviewSurfaceSub);
             removeSurfaceFromeList(mPreviewSurfaceSub);
         }
@@ -305,7 +365,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * @param previewSurface Surface
      */
     public void removeSurface(Surface previewSurface) {
-        if (previewSurface != null) {
+        if (mCameraClient != null && previewSurface != null) {
             mCameraClient.removeSurface(previewSurface);
             removeSurfaceFromeList(previewSurface);
         }
@@ -327,6 +387,16 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         if (mCameraClient != null && mCameraClient.isRecording()) {
             mCameraClient.stopRecording();
         }
+    }
+
+    /**
+     * not support yet
+     *
+     * @param callback
+     * @param pixelFormat
+     */
+    public void setFrameCallback(IFrameCallback callback, int pixelFormat) {
+
     }
 
     /**
@@ -398,14 +468,15 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         @Override
         public void onConnect() {
             Log.v(TAG, "onConnect:");
-//            if (mPreviewSurface != null) {
-//                mCameraClient.addSurface(mPreviewSurface, false);
-//                addSurfaceToList(mPreviewSurface);
-//                if (mPreviewSurfaceSub != null) {
-//                    mCameraClient.addSurface(mPreviewSurfaceSub, false);
-//                    addSurfaceToList(mPreviewSurfaceSub);
-//                }
-//            }
+
+            if (mPreviewSurface != null) {
+                mCameraClient.addSurface(mPreviewSurface, false);
+                addSurfaceToList(mPreviewSurface);
+            }
+            if (mPreviewSurfaceSub != null) {
+                mCameraClient.addSurface(mPreviewSurfaceSub, false);
+                addSurfaceToList(mPreviewSurfaceSub);
+            }
 
             // start UVCService
             final Intent intent = new Intent(mContext, UVCService.class);
