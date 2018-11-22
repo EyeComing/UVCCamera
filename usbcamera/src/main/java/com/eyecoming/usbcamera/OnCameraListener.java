@@ -39,5 +39,5 @@ public interface OnCameraListener {
      *
      * @param device UsbDevice
      */
-    void onDettach(UsbDevice device);
+    void onDetach(UsbDevice device);
 }

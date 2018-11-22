@@ -280,7 +280,7 @@ public class UCamera implements CameraDialog.CameraDialogParent {
         public void onDettach(final UsbDevice device) {
             Log.i(TAG, "dettach");
             if (mListener != null) {
-                mListener.onDettach(device);
+                mListener.onDetach(device);
             }
             isAttached = false;
         }
