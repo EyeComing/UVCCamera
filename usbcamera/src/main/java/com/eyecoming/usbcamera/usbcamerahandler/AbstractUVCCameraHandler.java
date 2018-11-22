@@ -731,6 +731,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
                 Log.v(TAG_THREAD, "handleOpen:");
             }
             handleClose();
+            if (isCameraOpened()) {
+                return;
+            }
             try {
                 final UVCCamera camera = new UVCCamera();
                 camera.open(ctrlBlock);
