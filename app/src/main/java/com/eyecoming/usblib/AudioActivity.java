@@ -137,7 +137,7 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
                 mCameraHandler = UVCCameraHandler.createHandler(AudioActivity.this, mUVCCameraView, 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, 1);
                 mCameraHandler.addCallback(mCameraCallback);
             }
-            if (mCameraHandler != null) {
+            if (mCameraHandler != null && !mCameraHandler.isPreviewing()) {
                 // UVCCameraHandler.open()为异步
                 mCameraHandler.open(ctrlBlock);
                 Log.i("usb camera", "connected: " + ctrlBlock.hashCode());
@@ -185,6 +185,7 @@ public class AudioActivity extends AppCompatActivity implements CameraDialog.Cam
                     if (mCameraHandler.isOpened()) {
                         mCameraHandler.close();
                     }
+                    mCameraHandler = null;
                 }
             }
         }

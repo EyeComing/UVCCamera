@@ -172,7 +172,7 @@ public final class CameraActivity extends AppCompatActivity implements CameraDia
                 mCameraHandler = UVCCameraHandler.createHandler(CameraActivity.this, mUVCCameraView, 1, PREVIEW_WIDTH, PREVIEW_HEIGHT, 1);
                 mCameraHandler.addCallback(mCameraCallback);
             }
-            if (mCameraHandler != null) {
+            if (mCameraHandler != null && !mCameraHandler.isPreviewing()) {
                 // UVCCameraHandler.open()为异步
                 mCameraHandler.open(ctrlBlock);
                 new Handler().postDelayed(new Runnable() {
