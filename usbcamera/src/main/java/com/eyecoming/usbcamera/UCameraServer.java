@@ -6,10 +6,11 @@ import android.hardware.usb.UsbDevice;
 import android.util.Log;
 import android.view.Surface;
 
+import com.eyecoming.usbcamera.impl.CameraClientCallback;
+import com.eyecoming.usbcamera.impl.CameraStatusCallback;
 import com.eyecoming.usbcamera.service.UVCService;
 import com.eyecoming.usbcamera.serviceclient.CameraClient;
 import com.eyecoming.usbcamera.serviceclient.ICameraClientCallback;
-import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.DeviceFilter;
 import com.serenegiant.usb.IFrameCallback;
 import com.serenegiant.usb.USBMonitor;
@@ -25,93 +26,127 @@ import static com.eyecoming.usbcamera.UCamera.isCameraDevice;
  * @author JesseHu
  * @date 2018/10/16
  */
-public class UCameraServer implements CameraDialog.CameraDialogParent {
+public class UCameraServer {
     private final static String TAG = "UCameraServer";
+    public static final int STATUS_UNKNOWN = -1;
+    public static final int STATUS_ATTACHED = 0;
+    public static final int STATUS_CONNECTED = 1;
+    public static final int STATUS_DISCONNECTED = 2;
+    public static final int STATUS_DETACHED = 3;
+    public static final int STATUS_OPEN_READY = 4;
+    public static final int STATUS_OPENING = 5;
+    public static final int STATUS_OPENED = 6;
+    public static final int STATUS_CLOSING = 7;
+    public static final int STATUS_CLOSED = 8;
     private static final int DEFAULT_WIDTH = 1280;
     private static final int DEFAULT_HEIGHT = 720;
-    private Context mContext;
-    private OnCameraListener mCameraListener;
-    private USBMonitor mUSBMonitor;
-    private boolean isAttached = false;
 
+    private static UCameraServer mServer;
+    private Context mContext;
+    private USBMonitor mUSBMonitor;
     private USBMonitor.UsbControlBlock mControlBlock;
     private CameraClient mCameraClient;
+
+    private boolean isAttached = false;
     private int mPreviewWidth;
     private int mPreviewHeight;
     private Surface mPreviewSurface;
     private Surface mPreviewSurfaceSub;
-    private boolean open = false;
     private List<Surface> surfaces;
+    private int mFilterId;
+    private int currentStatus = STATUS_DETACHED;
+
+    private OnCameraListener mCameraListener;
+    private CameraClientCallback mCameraClientCallback;
+    private CameraStatusCallback mCameraStatusCallback;
 
     /**
-     * init 初始化
-     *
-     * @param mContext Context
-     */
-    public UCameraServer(Context mContext) {
-        this(mContext, R.xml.device_filter);
-    }
-
-    /**
-     * init(with a custom filter for usb) 初始化,可自定义usb过滤
+     * initialization(with a custom filter for usb) 初始化,可自定义usb过滤
      *
      * @param mContext Context
      * @param filterId usb device filter id
      */
-    public UCameraServer(Context mContext, int filterId) {
+    private UCameraServer(Context mContext, int filterId) {
         this.mContext = mContext;
+        this.mFilterId = filterId;
         surfaces = new ArrayList<>();
+    }
+
+    /**
+     * get UCameraServer Instance
+     *
+     * @return UCameraServer
+     */
+    public static UCameraServer getInstance() {
+        return mServer;
+    }
+
+    /**
+     * initialization 初始化
+     *
+     * @param context Context
+     */
+    public static void init(Context context) {
+        init(context, R.xml.device_filter);
+    }
+
+    /**
+     * initialization 初始化
+     *
+     * @param context  Context
+     * @param filterId usb device filter id
+     */
+    public static void init(Context context, int filterId) {
+        mServer = new UCameraServer(context, filterId);
+    }
+
+    /**
+     * init USB monitor
+     */
+    public USBMonitor initUSBMonitor() {
         mUSBMonitor = new USBMonitor(mContext, mOnDeviceConnectListener);
-        List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, filterId);
+        List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, mFilterId);
         mUSBMonitor.setDeviceFilter(filters);
+        return mUSBMonitor;
     }
 
     /**
-     * init 初始化
+     * init USB monitor
      *
-     * @param mContext        Context
-     * @param mCameraListener OnCameraListener
-     */
-    public UCameraServer(Context mContext, OnCameraListener mCameraListener) {
-        this(mContext);
-        this.mCameraListener = mCameraListener;
-    }
-
-    /**
-     * init(with a custom filter for usb) 初始化,可自定义usb过滤
-     *
-     * @param mContext        Context
-     * @param filterID        usb device filter id
-     * @param mCameraListener OnCameraListener
-     */
-    public UCameraServer(Context mContext, int filterID, OnCameraListener mCameraListener) {
-        this(mContext, filterID);
-        this.mCameraListener = mCameraListener;
-    }
-
-    /**
-     * init 初始化
-     *
-     * @param mContext              Context
      * @param deviceConnectListener OnDeviceConnectListener
      */
-    public UCameraServer(Context mContext, USBMonitor.OnDeviceConnectListener deviceConnectListener) {
-        this(mContext, R.xml.device_filter, deviceConnectListener);
-    }
-
-    /**
-     * init(with a custom filter for usb) 初始化,可自定义usb过滤
-     *
-     * @param mContext              Context
-     * @param filterId              usb device filter id
-     * @param deviceConnectListener OnDeviceConnectListener
-     */
-    public UCameraServer(Context mContext, int filterId, USBMonitor.OnDeviceConnectListener deviceConnectListener) {
-        this.mContext = mContext;
-        surfaces = new ArrayList<>();
+    public USBMonitor initUSBMonitor(USBMonitor.OnDeviceConnectListener deviceConnectListener) {
         mUSBMonitor = new USBMonitor(mContext, deviceConnectListener);
-        List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, filterId);
+        List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, mFilterId);
         mUSBMonitor.setDeviceFilter(filters);
+        return mUSBMonitor;
+    }
+
+    /**
+     * set the connection listener for camera 设置连接监听器
+     *
+     * @param cameraListener OnCameraListener 连接监听
+     */
+    public void setOnCameraListener(OnCameraListener cameraListener) {
+        this.mCameraListener = cameraListener;
+    }
+
+    /**
+     * set the camera client callback 设置CameraClient回调
+     *
+     * @param cameraClientCallback CameraClientCallback
+     */
+    public void setCameraClientCallback(CameraClientCallback cameraClientCallback) {
+        this.mCameraClientCallback = cameraClientCallback;
+    }
+
+    /**
+     * set the camera status callback 设置camera状态回调
+     *
+     * @param cameraStatusCallback CameraStatusCallback
+     */
+    public void setCameraStatusCallback(CameraStatusCallback cameraStatusCallback) {
+        this.mCameraStatusCallback = cameraStatusCallback;
     }
 
     /**
@@ -142,14 +177,6 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         }
     }
 
-    /**
-     * set the connection listener for camera 设置连接监听器
-     *
-     * @param cameraListener OnCameraListener 连接监听
-     */
-    public void setOnCameraListener(OnCameraListener cameraListener) {
-        this.mCameraListener = cameraListener;
-    }
 
     /**
      * set the size of preview 设置预览尺寸
@@ -169,7 +196,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      */
     public void setPreviewDisplay(Surface mPreviewSurface) {
         this.mPreviewSurface = mPreviewSurface;
-        if (mPreviewSurface != null) {
+        if (mPreviewSurface != null && !isSurfaceAdded(mPreviewSurface)) {
             mCameraClient.addSurface(mPreviewSurface, false);
             addSurfaceToList(mPreviewSurface);
         }
@@ -182,7 +209,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      */
     public void setSubPreviewDisPlay(Surface mPreviewSurfaceSub) {
         this.mPreviewSurfaceSub = mPreviewSurfaceSub;
-        if (mPreviewSurfaceSub != null) {
+        if (mPreviewSurfaceSub != null && !isSurfaceAdded(mPreviewSurfaceSub)) {
             mCameraClient.addSurface(mPreviewSurfaceSub, false);
             addSurfaceToList(mPreviewSurfaceSub);
         }
@@ -199,7 +226,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         this.mPreviewSurface = mPreviewSurface;
         this.mPreviewWidth = width;
         this.mPreviewHeight = height;
-        if (mPreviewSurface != null) {
+        if (mCameraClient != null && mPreviewSurface != null && !isSurfaceAdded(mPreviewSurface)) {
             mCameraClient.addSurface(mPreviewSurface, false);
             addSurfaceToList(mPreviewSurface);
         }
@@ -221,25 +248,6 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     }
 
     /**
-     * set the usb filter of sdk 设置默认摄像头过滤器
-     */
-    public void setDeviceFilter() {
-        final List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, R.xml.device_filter);
-        mUSBMonitor.setDeviceFilter(filters);
-    }
-
-    /**
-     * set the custom usb filter 设置自定义摄像头过滤器
-     *
-     * @param deviceFilterId usb device filter id in XML folder
-     *                       <br/>摄像头过滤文件ID(只限xml文件夹)
-     */
-    public void setDeviceFilter(int deviceFilterId) {
-        final List<DeviceFilter> filters = DeviceFilter.getDeviceFilters(mContext, deviceFilterId);
-        mUSBMonitor.setDeviceFilter(filters);
-    }
-
-    /**
      * request the first available usb camera
      * <br/>获取第一个摄像头设备
      *
@@ -252,7 +260,6 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
             //取第一个摄像头
             device = deviceList.get(0);
         }
-
         return device;
     }
 
@@ -260,10 +267,23 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * open camera 开启摄像头
      */
     public void openCamera() {
+        openCamera(getFirstUsbCameraDevice());
+    }
+
+    /**
+     * open camera 开启摄像头
+     *
+     * @param device UsbDevice
+     */
+    public void openCamera(UsbDevice device) {
         if (mCameraClient == null) {
             mCameraClient = new CameraClient(mContext, mCameraCallBack);
         }
-        mCameraClient.select(getFirstUsbCameraDevice());
+        mCameraClient.select(device);
+        currentStatus = STATUS_OPEN_READY;
+        if (mCameraStatusCallback != null) {
+            mCameraStatusCallback.cameraStatus(STATUS_OPEN_READY);
+        }
 
         if (mPreviewWidth == 0 || mPreviewHeight == 0) {
             mPreviewWidth = DEFAULT_WIDTH;
@@ -271,7 +291,10 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         }
         mCameraClient.resize(mPreviewWidth, mPreviewHeight);
         mCameraClient.connect();
-        open = true;
+        currentStatus = STATUS_OPENING;
+        if (mCameraStatusCallback != null) {
+            mCameraStatusCallback.cameraStatus(STATUS_OPENING);
+        }
     }
 
     /**
@@ -280,18 +303,29 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     public void disconnect() {
         if (mCameraClient != null) {
             mCameraClient.disconnect();
-            open = false;
+            if (currentStatus != STATUS_CLOSED) {
+                currentStatus = STATUS_CLOSING;
+                if (mCameraStatusCallback != null) {
+                    mCameraStatusCallback.cameraStatus(STATUS_CLOSING);
+                }
+            }
         }
     }
 
     /**
      * release camera 释放Camera
      */
-    public void release() {
+    private void release() {
         if (mCameraClient != null) {
+            mCameraClient.disconnect();
             mCameraClient.release();
             mCameraClient = null;
-            open = false;
+            if (currentStatus != STATUS_CLOSED) {
+                currentStatus = STATUS_CLOSING;
+                if (mCameraStatusCallback != null) {
+                    mCameraStatusCallback.cameraStatus(STATUS_CLOSING);
+                }
+            }
         }
     }
 
@@ -299,19 +333,16 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * stop camera server 停止CameraServer
      */
     public void stopServer() {
-        if (mCameraClient != null) {
-            mCameraClient.disconnect();
-            mCameraClient.release();
-            mCameraClient = null;
-            open = false;
-        }
+        removeSurface();
+        removeSurfaceSub();
+        release();
     }
 
     /**
      * add surface to camera 添加预览Surface
      */
     public void addSurface() {
-        if (mCameraClient != null && mPreviewSurface != null) {
+        if (mCameraClient != null && mPreviewSurface != null && !isSurfaceAdded(mPreviewSurface)) {
             mCameraClient.addSurface(mPreviewSurface, false);
             addSurfaceToList(mPreviewSurface);
         }
@@ -321,7 +352,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * add sub surface to camera 添加副预览Surface
      */
     public void addSurfaceSub() {
-        if (mCameraClient != null && mPreviewSurfaceSub != null) {
+        if (mCameraClient != null && mPreviewSurfaceSub != null && !isSurfaceAdded(mPreviewSurfaceSub)) {
             mCameraClient.addSurface(mPreviewSurfaceSub, false);
             addSurfaceToList(mPreviewSurfaceSub);
         }
@@ -333,7 +364,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * @param previewSurface Surface
      */
     public void addSurface(Surface previewSurface) {
-        if (mCameraClient != null && previewSurface != null) {
+        if (mCameraClient != null && previewSurface != null && !isSurfaceAdded(previewSurface)) {
             mCameraClient.addSurface(previewSurface, false);
             addSurfaceToList(previewSurface);
         }
@@ -384,7 +415,7 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
      * stop recording 停止录制
      */
     public void stopRecording() {
-        if (mCameraClient != null && mCameraClient.isRecording()) {
+        if (mCameraClient.isRecording()) {
             mCameraClient.stopRecording();
         }
     }
@@ -392,11 +423,11 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
     /**
      * not support yet
      *
-     * @param callback
+     * @param callback    IFrameCallback
      * @param pixelFormat
      */
     public void setFrameCallback(IFrameCallback callback, int pixelFormat) {
-
+        throw new RuntimeException("frame callback is not supported yet");
     }
 
     /**
@@ -419,6 +450,10 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
             if (isCameraDevice(device)) {
                 if (!isAttached) {
                     isAttached = true;
+                    currentStatus = STATUS_ATTACHED;
+                    if (mCameraStatusCallback != null) {
+                        mCameraStatusCallback.cameraStatus(STATUS_ATTACHED);
+                    }
                 }
             }
         }
@@ -435,6 +470,10 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
                 if (mCameraListener != null) {
                     mCameraListener.connected(device, ctrlBlock);
                 }
+                currentStatus = STATUS_CONNECTED;
+                if (mCameraStatusCallback != null) {
+                    mCameraStatusCallback.cameraStatus(STATUS_CONNECTED);
+                }
             }
         }
 
@@ -446,6 +485,10 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
             if (mCameraListener != null) {
                 mCameraListener.disconnect(device, ctrlBlock);
             }
+            currentStatus = STATUS_DISCONNECTED;
+            if (mCameraStatusCallback != null) {
+                mCameraStatusCallback.cameraStatus(STATUS_DISCONNECTED);
+            }
         }
 
         @Override
@@ -455,37 +498,54 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
 
         @Override
         public void onDettach(final UsbDevice device) {
-            Log.i(TAG, "dettach");
+            Log.i(TAG, "detach");
             if (mCameraListener != null) {
-                mCameraListener.onDettach(device);
+                mCameraListener.onDetach(device);
             }
             isAttached = false;
+            currentStatus = STATUS_DETACHED;
+            if (mCameraStatusCallback != null) {
+                mCameraStatusCallback.cameraStatus(STATUS_DETACHED);
+            }
         }
 
     };
 
+    /**
+     * Camera client callback
+     */
     private final ICameraClientCallback mCameraCallBack = new ICameraClientCallback() {
         @Override
         public void onConnect() {
             Log.v(TAG, "onConnect:");
 
-            if (mPreviewSurface != null) {
-                mCameraClient.addSurface(mPreviewSurface, false);
-                addSurfaceToList(mPreviewSurface);
-            }
-            if (mPreviewSurfaceSub != null) {
-                mCameraClient.addSurface(mPreviewSurfaceSub, false);
-                addSurfaceToList(mPreviewSurfaceSub);
-            }
+            addSurface();
+            addSurfaceSub();
 
             // start UVCService
-            final Intent intent = new Intent(mContext, UVCService.class);
-            mContext.startService(intent);
+            Intent mService = new Intent(mContext, UVCService.class);
+            mContext.startService(mService);
+
+            if (mCameraClientCallback != null) {
+                mCameraClientCallback.onConnected();
+            }
+
+            currentStatus = STATUS_OPENED;
+            if (mCameraStatusCallback != null) {
+                mCameraStatusCallback.cameraStatus(STATUS_OPENED);
+            }
         }
 
         @Override
         public void onDisconnect() {
             Log.v(TAG, "onDisconnect:");
+            if (mCameraClientCallback != null) {
+                mCameraClientCallback.onDisconnected();
+            }
+            currentStatus = STATUS_CLOSED;
+            if (mCameraStatusCallback != null) {
+                mCameraStatusCallback.cameraStatus(STATUS_CLOSED);
+            }
         }
 
     };
@@ -510,24 +570,22 @@ public class UCameraServer implements CameraDialog.CameraDialogParent {
         return mUSBMonitor.hasPermission(device);
     }
 
-
-    @Override
-    public USBMonitor getUSBMonitor() {
-        return mUSBMonitor;
-    }
-
-    @Override
-    public void onDialogResult(boolean b) {
-
-    }
-
     /**
      * check camera opened 摄像头是否开启
      *
      * @return true/false
      */
     public boolean isOpen() {
-        return open;
+        return currentStatus == STATUS_OPENED;
+    }
+
+    /**
+     * get the status of camera 获取当前Camera状态
+     *
+     * @return camera status Camera状态
+     */
+    public int getCameraStatus() {
+        return currentStatus;
     }
 
 
